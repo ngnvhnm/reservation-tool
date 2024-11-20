@@ -1,0 +1,22 @@
+services:
+  postgres:
+    image: postgres:latest
+    container_name: postgres_db
+    environment:
+      POSTGRES_USER: dach123
+      POSTGRES_PASSWORD: dach123
+      POSTGRES_DB: dachpc_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+    networks:
+      - dach_net
+
+volumes:
+  pg_data:
+    driver: local
+
+networks:
+  dach_net:
+    driver: bridge
