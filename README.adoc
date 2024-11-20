@@ -1,0 +1,60 @@
+= DACH Project Consulting Reservation Tool
+:icons: font
+
+
+[%autowidth, cols="a,a", frame=none, grid=none]
+|===
+| image::https://img.shields.io/badge/lang-de-green.svg[link=README.de.adoc]
+| image::https://img.shields.io/badge/lang-en-green.svg[link=README.adoc]
+|===
+
+NOTE: Ths project is still on the early stages of development. The README will be updated as the project progresses.
+
+== Overview
+The DACH PC Reservation Tool is a web-based reservation system designed to streamline the booking of resources like parking slots and conference rooms. This tool aims to enhance resource utilization, scheduling, and user experience for authenticated users within an organization. Future versions may include the flexibility to book additional resources as well.
+
+Additionally, the project will be made public, providing prospective applicants the opportunity to showcase their skills and analytical abilities by submitting Pull Requests. This approach allows candidates to engage with the codebase, propose improvements, and contribute actively to the project.
+
+== Features
+
+=== 1. Resource Reservation
+
+The tool currently supports reservations for:
+1. Parking slots
+2. Conference rooms
+3. Potential for additional resource type in future releases
+
+=== 2. User Authentication
+
+The application leverages Keycloak for secure user authentication, allowing only authorized personnel to access and make reservations.
+
+=== 3. Calendar Integration
+
+* Upon booking, the reservation system will add the booking creator as an attendee.
+* This integration allows users to view their bookings directly on their personal calendars, ensuring they are kept informed of upcoming reservations.
+
+
+
+== Technical Stack
+
+=== Frontend
+- https://react.dev/[React]
+- https://vite.dev/[Vite]
+- https://www.npmjs.com/[Node Package Manager (NPM)]
+- https://mantine.dev/[Mantine.ui]
+
+=== Backend
+- https://spring.io/[Spring Boot]
+- https://www.postgresql.org/[PostgreSQL]
+- https://www.one.com/en/[One.com] API for calendar integration
+- https://www.keycloak.org/[Keycloak] for user authentication
+- https://www.docker.com/[Docker] for containerization
+
+== Flows
+
+=== User Flow
+image::assets/en-userFlow-booking.png[User Flow]
+
+=== Technical Flow
+image::assets/en-technicalFlow-booking.png[Technical Flow]
+
