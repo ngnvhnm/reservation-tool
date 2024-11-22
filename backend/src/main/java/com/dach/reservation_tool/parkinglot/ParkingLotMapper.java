@@ -41,15 +41,12 @@ public class ParkingLotMapper {
             case NINE_TO_ONE:
                 startHour = 9;
                 endHour = 13;
-                break;
             case ONE_TO_FIVE:
                 startHour = 13;
                 endHour = 17;
-                break;
             case WHOLE_DAY:
                 startHour = 9;
                 endHour = 17;
-                break;
         }
         return new ParkinglotResponseDto(
                 entity.getId(),
