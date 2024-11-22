@@ -3,7 +3,6 @@ package com.dach.reservation_tool.parkinglot;
 
 import com.dach.reservation_tool.parkinglot.dto.ParkinglotCreateDto;
 import com.dach.reservation_tool.parkinglot.dto.ParkinglotResponseDto;
-import com.dach.reservation_tool.parkinglot.dto.ParkinglotUpdateDto;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
