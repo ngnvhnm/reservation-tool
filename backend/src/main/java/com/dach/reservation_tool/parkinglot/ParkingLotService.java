@@ -36,15 +36,7 @@ public class ParkingLotService {
         return mapper.toResponseDTO(savedReservation);
     }
 
-    public ParkinglotResponseDto updateReservation(UUID id, ParkinglotUpdateDto updateDto) {
-        return repository.findById(id)
-                .map(existingReservation -> {
-                    ParkingLot updatedReservation = mapper.updateEntity(existingReservation, updateDto);
-                    ParkingLot savedReservation = repository.save(updatedReservation);
-                    return mapper.toResponseDTO(savedReservation);
-                })
-                .orElseThrow(() -> new IllegalArgumentException("Reservation not found with ID: " + id));
-    }
+
 
     public void deleteReservation(UUID id) {
         if (repository.existsById(id)) {
