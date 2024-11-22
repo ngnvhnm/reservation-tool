@@ -36,21 +36,20 @@ public class ParkingLotMapper {
     // Map Conference entity to ConferenceResponseDTO
     public ParkinglotResponseDto toResponseDTO(ParkingLot entity){
         int startHour = 0;
-        int endHour = 0;
-        switch (entity.getTimeslot()){
-            case NINE_TO_ONE:
+        int endHour = switch (entity.getTimeslot()) {
+            case NINE_TO_ONE -> {
                 startHour = 9;
-                endHour = 13;
-                break;
-            case ONE_TO_FIVE:
+                yield 13;
+            }
+            case ONE_TO_FIVE -> {
                 startHour = 13;
-                endHour = 17;
-                break;
-            case WHOLE_DAY:
+                yield 17;
+            }
+            case WHOLE_DAY -> {
                 startHour = 9;
-                endHour = 17;
-                break;
-        }
+                yield 17;
+            }
+        };
         return new ParkinglotResponseDto(
                 entity.getId(),
                 mapTime(entity, startHour),
