@@ -17,7 +17,6 @@ public interface ConferenceRepository extends JpaRepository<Conference, UUID> {
     List<Conference> findByMail(@Param("mail") String mail);
 
 
-
 //    @Query("SELECT t FROM Transaction t WHERE t.senderId =: id OR t.receiverId =:id")
 //    List<Transaction> findRelatedTransactionsInDatabase(@Param("id") Integer id);
 

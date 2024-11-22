@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import net.fortuna.ical4j.model.property.Uid;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -38,5 +39,6 @@ public class ParkingLot {
     @Column(name = "parking_lot_number")
     private PARKINGLOT_NUMBER parkingLotNumber;
 
-
+    // For easier finding in one calendar
+    private Uid calendarId;
 }

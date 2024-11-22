@@ -98,8 +98,7 @@ public class ConferenceController {
     // and books the same reservation with a different startTime.
     @PostMapping("/{mail}/recreateLast")
     public ResponseEntity<String> recreateLastReservation(@PathVariable String mail,@RequestBody LocalDateTime startTime){
-        ResponseEntity<String> responseBody= service.recreateLastReservation(mail,startTime);
-        return responseBody;
+        return service.recreateLastReservation(mail,startTime);
     }
 
 
