@@ -3,6 +3,7 @@ package com.dach.reservation_tool.conference;
 import com.dach.reservation_tool.conference.dto.ConferenceCreateDto;
 import com.dach.reservation_tool.conference.dto.ConferenceResponseDto;
 import com.dach.reservation_tool.conference.dto.ConferenceUpdateDto;
+import com.dach.reservation_tool.util.OneClient;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -15,6 +16,7 @@ public class ConferenceService {
 
     private final ConferenceRepository repository;
     private final ConferenceMapper mapper;
+    private final OneClient oneClient;
 
 
 
@@ -23,9 +25,10 @@ public class ConferenceService {
 
 
 
-    public ConferenceService(ConferenceRepository repository, ConferenceMapper mapper) {
+    public ConferenceService(ConferenceRepository repository, ConferenceMapper mapper, OneClient oneClient) {
         this.repository = repository;
         this.mapper = mapper;
+        this.oneClient = oneClient;
     }
 
 
@@ -64,8 +67,16 @@ public class ConferenceService {
     public ResponseEntity<String> createConference(ConferenceCreateDto createDto) {
         Conference conference = mapper.toEntity(createDto);
 
-        if (this.doesCollide(conference) == false) {
-            Conference savedConference = repository.save(conference);
+        if (createDto.endTime().isBefore(createDto.startTime())) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Not a valid time range");
+        }
+
+        if (!this.doesCollide(conference)) {
+            oneClient.createEventForConference(createDto,
+                    conference.getCalendarId(),
+                    Arrays.stream(createDto.attendeeList().split(",")).toList(),
+                    "Conference room booked by " + createDto.bookerEmail());
+            repository.save(conference);
             return ResponseEntity.ok("Das Event wurde erfolgreich erstellt");
         }
         else {
@@ -81,6 +92,16 @@ public class ConferenceService {
 
 
     public ConferenceResponseDto updateConference(UUID id, ConferenceUpdateDto updateDto) {
+        if (repository.existsById(id)) {
+            var list = updateDto.attendeeList() == null ? null : updateDto.attendeeList();
+            var oldConf = repository.findById(id);
+            oneClient.editEventForConference(updateDto,
+                    Collections.singletonList(list),
+                    oldConf.orElseThrow().getConferenceType(),
+                    oldConf.get().getCalendarId(),
+                    oldConf.orElseThrow().getBookerEmail(),
+                    "Conference room details updated by " + oldConf.orElseThrow().getBookerEmail());
+        }
         return repository.findById(id)
                 .map(existingConference -> {
                     Conference updatedConference = mapper.updateEntity(existingConference, updateDto);
@@ -100,6 +121,8 @@ public class ConferenceService {
 
     public void deleteConference(UUID id) {
         if (repository.existsById(id)) {
+            var conference = repository.findById(id);
+            oneClient.deleteEventForConference(conference.orElseThrow().getCalendarId(), conference.get().getConferenceType());
             repository.deleteById(id);
         } else {
             throw new IllegalArgumentException("Conference not found with ID: " + id);
@@ -128,7 +151,7 @@ public class ConferenceService {
                                                                         lastReservation.getBookerEmail(),
                                                                         lastReservation.getConferenceType(),
                                                                         lastReservation.getAttendeeList());
-        if(this.doesCollide(mapper.toEntity(newReservationDto)) == false) {
+        if(!this.doesCollide(mapper.toEntity(newReservationDto))) {
             repository.save(mapper.toEntity(newReservationDto));
             return  ResponseEntity.ok("Das Event wurde erfolgreich erstellt");
           }
@@ -157,9 +180,7 @@ public class ConferenceService {
                             List<Conference> consideredList = new ArrayList<>(reservationList.stream().toList());
                             for (int i = 1; i < consideredList.size(); i++) {
 
-                                if (consideredList.get(i - 1).getEndTime().isBefore(consideredList.get(i).getEndTime())) {
-
-                                } else {
+                                if (!consideredList.get(i - 1).getTimeOfBooking().isBefore(consideredList.get(i).getTimeOfBooking())) {
                                     Collections.swap(consideredList, i - 1, i);
                                 }
 
@@ -190,34 +211,27 @@ public class ConferenceService {
         List<Conference> conferenceList = repository.findAll();
 
 
+        for (Conference value : conferenceList) {
+            if (value.getEndTime().isAfter(conference.getStartTime())
+                    && (value.getStartTime().isBefore(conference.getStartTime())
+                    || value.getStartTime().isEqual(conference.getStartTime()))
+                    && value.getConferenceType() == conference.getConferenceType()) {
 
-        for (int i = 0;i < conferenceList.size();i++){
-            if(   conferenceList.get(i).getEndTime().isAfter(conference.getStartTime())
-               &&(conferenceList.get(i).getStartTime().isBefore(conference.getStartTime())
-               || conferenceList.get(i).getStartTime().isEqual(conference.getStartTime()))
-               && conferenceList.get(i).getConferenceType() == conference.getConferenceType()){
+                return true;
+            } else if ((value.getEndTime().isAfter(conference.getEndTime())
+                    || value.getEndTime().isEqual(conference.getEndTime()))
+                    && value.getStartTime().isBefore(conference.getEndTime())
+                    && value.getConferenceType() == conference.getConferenceType()) {
+
+                return true;
+            } else if ((value.getEndTime().isBefore(conference.getEndTime())
+                    || value.getEndTime().isEqual(conference.getEndTime()))
+                    && (value.getStartTime().isAfter(conference.getStartTime())
+                    || value.getStartTime().isEqual(conference.getStartTime()))
+                    && value.getConferenceType() == conference.getConferenceType()) {
 
                 return true;
             }
-
-            else if( ( conferenceList.get(i).getEndTime().isAfter(conference.getEndTime())
-                    || conferenceList.get(i).getEndTime().isEqual(conference.getEndTime()) )
-                    && conferenceList.get(i).getStartTime().isBefore(conference.getEndTime())
-                    && conferenceList.get(i).getConferenceType() == conference.getConferenceType()){
-
-                return true;
-            }
-
-
-            else if( ( conferenceList.get(i).getEndTime().isBefore(conference.getEndTime())
-                    || conferenceList.get(i).getEndTime().isEqual(conference.getEndTime()) )
-                    &&(conferenceList.get(i).getStartTime().isAfter(conference.getStartTime())
-                    || conferenceList.get(i).getStartTime().isEqual(conference.getStartTime()) )
-                    && conferenceList.get(i).getConferenceType() == conference.getConferenceType()){
-
-                return true;
-            }
-
 
 
         }
