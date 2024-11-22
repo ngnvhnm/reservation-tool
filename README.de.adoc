@@ -51,7 +51,7 @@ Die Anwendung verwendet Keycloak für eine sichere Benutzer-Authentifizierung un
 == Abläufe
 
 === User Flow
-image::assets/en-userFlow-booking.png[User Flow]
+image::assets/UserFlow.png[User Flow]
 
 === Technical Flow
-image::assets/en-technicalFlow-booking.png[Technical Flow]
+image::assets/TechnicalFlow.png[Technical Flow]
