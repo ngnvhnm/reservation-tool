@@ -1,7 +1,5 @@
 package com.dach.reservation_tool.general;
 
-import com.dach.reservation_tool.conference.CONF_TYPE;
-import com.dach.reservation_tool.parkinglot.PARKINGLOT_NUMBER;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -9,8 +7,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.Arrays;
 import java.util.List;
 
-import static com.dach.reservation_tool.conference.CONF_TYPE.CONFERENCE_OG2;
-import static com.dach.reservation_tool.conference.CONF_TYPE.CONFERENCE_OG3;
+import static com.dach.reservation_tool.conference.CONF_TYPE.*;
 import static com.dach.reservation_tool.parkinglot.PARKINGLOT_NUMBER.*;
 
 @RestController
