@@ -3,6 +3,7 @@
 .vscode/
 
 # Spring related files
-**/.target/
+backend/target/**
 
+# Environment
 .env
