@@ -7,17 +7,23 @@ import { BaseLayout }from './layout/BaseLayout.tsx';
 import { AppRoutes } from './AppRoutes.tsx';
 import './App.css'
 
-function App() {
+import keycloak from './providers/authentication/keycloak.ts';
 
+import { ReactKeycloakProvider } from '@react-keycloak/web';
+declare module '@react-keycloak/web';
+
+function App() {
   return (
-    <MantineProvider>
+    <ReactKeycloakProvider authClient={keycloak} initOptions={{ onLoad: 'login-required'}}>
+      <MantineProvider>
         <BrowserRouter>
           <BaseLayout>
             <AppRoutes />
           </BaseLayout>
         </BrowserRouter>
-    </MantineProvider>
-  )
+      </MantineProvider>
+  </ReactKeycloakProvider>
+);
 }
 
 export default App
