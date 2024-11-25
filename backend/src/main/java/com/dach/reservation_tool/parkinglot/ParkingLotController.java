@@ -8,6 +8,7 @@ import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -65,4 +66,12 @@ public class ParkingLotController {
             return ResponseEntity.notFound().build();
         }
     }
+
+    // 6. Searches for the last reservation that has been booked by a certain user(defined by an email adress)
+    // and books the same reservation with a different startTime.
+    @PostMapping("/{mail}/recreateLast")
+    public ResponseEntity<String> recreateLastReservation(@PathVariable String mail,@RequestBody LocalDateTime date, @RequestBody TIMESLOT timeslot){
+        return service.recreateLastReservation(mail,date, timeslot);
+    }
+
 }
