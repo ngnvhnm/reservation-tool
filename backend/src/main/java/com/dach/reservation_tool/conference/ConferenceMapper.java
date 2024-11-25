@@ -3,6 +3,7 @@ package com.dach.reservation_tool.conference;
 import com.dach.reservation_tool.conference.dto.ConferenceCreateDto;
 import com.dach.reservation_tool.conference.dto.ConferenceResponseDto;
 import com.dach.reservation_tool.conference.dto.ConferenceUpdateDto;
+import net.fortuna.ical4j.util.RandomUidGenerator;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -12,13 +13,15 @@ public class ConferenceMapper {
 
     // Map ConferenceCreateDTO to Conference entity
     public Conference toEntity(ConferenceCreateDto dto) {
+        var uid = new RandomUidGenerator().generateUid();
         Conference conference = new Conference();
         conference.setStartTime(dto.startTime());
         conference.setEndTime(dto.endTime());
         conference.setBookerEmail(dto.bookerEmail());
         conference.setConferenceType(dto.conferenceType());
         conference.setAttendeeList(dto.attendeeList());
-        conference.setTimeOfBooking(LocalDateTime.now()); // Automatically set time of booking
+        conference.setTimeOfBooking(LocalDateTime.now());// Automatically set time of booking
+        conference.setCalendarId(uid);
         return conference;
     }
 

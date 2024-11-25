@@ -1,2 +1,9 @@
+#IDE Related Folders
 .idea/
 .vscode/
+
+# Spring related files
+backend/target/**
+
+# Environment
+.env

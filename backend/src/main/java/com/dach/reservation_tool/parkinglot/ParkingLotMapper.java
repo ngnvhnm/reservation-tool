@@ -4,6 +4,8 @@ package com.dach.reservation_tool.parkinglot;
 
 import com.dach.reservation_tool.parkinglot.dto.ParkinglotCreateDto;
 import com.dach.reservation_tool.parkinglot.dto.ParkinglotResponseDto;
+import com.dach.reservation_tool.parkinglot.dto.ParkinglotUpdateDto;
+import net.fortuna.ical4j.util.RandomUidGenerator;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -13,6 +15,7 @@ public class ParkingLotMapper {
 
     // Map ParkinglotCreateDTO to ParkingLot entity
     public ParkingLot toEntity(ParkinglotCreateDto dto) {
+        var uid = new RandomUidGenerator().generateUid();
         ParkingLot parkingLot = new ParkingLot();
         parkingLot.setDate(dto.startTime());
         switch(dto.startTime().getHour()){
@@ -30,6 +33,7 @@ public class ParkingLotMapper {
         parkingLot.setTimeOfBooking(LocalDateTime.now()); // Automatically set time of booking
         parkingLot.setBookerEmail(dto.bookerEmail());
         parkingLot.setParkingLotNumber(dto.parkinglotNumber());
+        parkingLot.setCalendarId(uid);
         return parkingLot;
     }
 
@@ -60,6 +64,16 @@ public class ParkingLotMapper {
         );
 
 
+    }
+
+    public ParkingLot updateEntity(ParkingLot entity, ParkinglotUpdateDto dto) {
+        if (dto.startTime() != null) {
+            entity.setStartTime(dto.startTime());
+        }
+        if (dto.endTime() != null) {
+            entity.setEndTime(dto.endTime());
+        }
+        return entity;
     }
 
     private LocalDateTime mapTime(ParkingLot entity, int hour){
