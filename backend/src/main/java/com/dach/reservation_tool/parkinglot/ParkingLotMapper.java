@@ -67,14 +67,22 @@ public class ParkingLotMapper {
     }
 
     public ParkingLot updateEntity(ParkingLot entity, ParkinglotUpdateDto dto) {
-        if (dto.startTime() != null) {
-            entity.setStartTime(dto.startTime());
-        }
-        if (dto.endTime() != null) {
-            entity.setEndTime(dto.endTime());
+        entity.setDate(dto.startTime());
+        switch(dto.startTime().getHour()){
+            case 9:
+                if(dto.endTime().getHour() == 13){
+                    entity.setTimeslot(TIMESLOT.NINE_TO_ONE);
+                    break;
+                } else if (dto.endTime().getHour() == 17) {
+                    entity.setTimeslot(TIMESLOT.WHOLE_DAY);
+                    break;
+                }
+            case 13:
+                entity.setTimeslot(TIMESLOT.ONE_TO_FIVE);
         }
         return entity;
     }
+
 
     private LocalDateTime mapTime(ParkingLot entity, int hour){
         return LocalDateTime.of(entity.getDate().getYear(), entity.getDate().getMonthValue(), entity.getDate().getDayOfMonth(), hour, 0);

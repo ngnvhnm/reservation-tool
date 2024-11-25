@@ -3,6 +3,7 @@ package com.dach.reservation_tool.parkinglot;
 
 import com.dach.reservation_tool.parkinglot.dto.ParkinglotCreateDto;
 import com.dach.reservation_tool.parkinglot.dto.ParkinglotResponseDto;
+import com.dach.reservation_tool.parkinglot.dto.ParkinglotUpdateDto;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -41,8 +42,20 @@ public class ParkingLotController {
         return ResponseEntity.ok(responseDto);
     }
 
+    // 4. Update an existing conference
+    @PutMapping("/{id}")
+    public ResponseEntity<ParkinglotResponseDto> updateReservation(
+            @PathVariable UUID id,
+            @RequestBody ParkinglotUpdateDto updateDto) {
+        try {
+            ParkinglotResponseDto responseDto = service.updateReservation(id, updateDto);
+            return ResponseEntity.ok(responseDto);
+        } catch (IllegalArgumentException ex) {
+            return ResponseEntity.notFound().build();
+        }
+    }
 
-    // 4. Delete a conference
+    // 5. Delete a conference
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteReservation(@PathVariable UUID id) {
         try {

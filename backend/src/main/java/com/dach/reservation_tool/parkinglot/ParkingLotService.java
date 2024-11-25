@@ -3,6 +3,7 @@ package com.dach.reservation_tool.parkinglot;
 
 import com.dach.reservation_tool.parkinglot.dto.ParkinglotCreateDto;
 import com.dach.reservation_tool.parkinglot.dto.ParkinglotResponseDto;
+import com.dach.reservation_tool.parkinglot.dto.ParkinglotUpdateDto;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -36,7 +37,15 @@ public class ParkingLotService {
         return mapper.toResponseDTO(savedReservation);
     }
 
-
+    public ParkinglotResponseDto updateReservation(UUID id, ParkinglotUpdateDto updateDto) {
+        return repository.findById(id)
+                .map(existingReservation -> {
+                    ParkingLot updatedReservation = mapper.updateEntity(existingReservation, updateDto);
+                    ParkingLot savedReservation = repository.save(updatedReservation);
+                    return mapper.toResponseDTO(savedReservation);
+                })
+                .orElseThrow(() -> new IllegalArgumentException("Reservation not found with ID: " + id));
+    }
 
     public void deleteReservation(UUID id) {
         if (repository.existsById(id)) {
