@@ -3,6 +3,7 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
+  "proxy": "http://localhost:8080",
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
@@ -16,11 +17,8 @@
     "@mantine/form": "^7.14.1",
     "@mantine/hooks": "^7.14.1",
     "@mantine/notifications": "^7.14.1",
-    "@mantine/nprogress": "^7.14.1",
-    "@react-keycloak/web": "^3.4.0",
     "@tabler/icons-react": "^3.22.0",
     "dayjs": "^1.11.13",
-    "keycloak-js": "^26.0.6",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-router-dom": "^7.0.0"

@@ -23,11 +23,11 @@ public class ParkingLot {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID Id;
 
-    @Column(name = "start_time")
-    private LocalDateTime startTime;
+    @Column(name = "date")
+    private LocalDateTime date;
 
-    @Column(name = "end_time")
-    private LocalDateTime endTime;
+    @Column(name = "timeslot")
+    private TIMESLOT timeslot;
 
     @Column(name = "time_of_booking")
     private LocalDateTime timeOfBooking;
