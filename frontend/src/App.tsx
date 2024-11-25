@@ -1,6 +1,5 @@
 import '@mantine/core/styles.css';
 import '@mantine/dates/styles.css';
-import '@mantine/nprogress/styles.css';
 import { MantineProvider } from '@mantine/core';
 import { BrowserRouter } from 'react-router-dom';
 import { BaseLayout }from './layout/BaseLayout.tsx';
