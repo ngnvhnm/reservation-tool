@@ -3,6 +3,7 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
+  "proxy": "http://localhost:8080",
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
@@ -16,7 +17,6 @@
     "@mantine/form": "^7.14.1",
     "@mantine/hooks": "^7.14.1",
     "@mantine/notifications": "^7.14.1",
-    "@mantine/nprogress": "^7.14.1",
     "@tabler/icons-react": "^3.22.0",
     "dayjs": "^1.11.13",
     "react": "^18.3.1",

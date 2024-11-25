@@ -1,18 +1,15 @@
 module.exports = {
   root: true,
-  env: { browser: true, es2020: true },
+  env: { browser: true, es2024: true },
   extends: [
     'eslint:recommended',
-    'plugin:react/recommended',
-    'plugin:react/jsx-runtime',
     'plugin:@typescript-eslint/recommended-type-checked',
-    'plugin:@typescript-eslint/stylistic-type-checked',
-    'plugin:react-hooks/recommended',
-    // This disables the formatting rules in ESLint that Prettier is going to be responsible for handling.
-    // Make sure it's always the last config, so it gets the chance to override other configs.
+    'plugin:react/recommended', // Only when using React
+    'plugin:react-hooks/recommended', // Only when using React
+    'plugin:react/jsx-runtime', // Only when using React
     'prettier',
   ],
-  ignorePatterns: ['dist', '.eslintrc.cjs'],
+  ignorePatterns: ['dist', '.eslintrc.cjs', 'postcss.config.cjs'],
   parser: '@typescript-eslint/parser',
   parserOptions: {
     ecmaVersion: 'latest',
@@ -20,11 +17,33 @@ module.exports = {
     project: ['./tsconfig.json', './tsconfig.node.json'],
     tsconfigRootDir: __dirname,
   },
-  plugins: ['react-refresh'],
-  rules: {
-    'react-refresh/only-export-components': [
-      'warn',
-      { allowConstantExport: true },
-    ],
+  settings: {
+    react: {
+      version: 'detect',
+    },
   },
-}
+  plugins: ['@typescript-eslint', 'react', 'react-refresh', 'prettier'],
+  rules: {
+    quotes: ['error', 'single'],
+    semi: ['error', 'always'],
+    'spaced-comment': [
+      'error',
+      'always',
+      {
+        exceptions: ['-', '+'],
+        markers: ['!', 'TODO', '?', '//'],
+      },
+    ],
+    'capitalized-comments': [
+      'error',
+      'always',
+      {
+        ignorePattern: 'pragma|ignored',
+        ignoreInlineComments: true,
+        ignoreConsecutiveComments: true,
+      },
+    ],
+    curly: ['error', 'all'],
+    'react-refresh/only-export-components': ['warn', { allowConstantExport: true }], // Only when using React
+  },
+};
