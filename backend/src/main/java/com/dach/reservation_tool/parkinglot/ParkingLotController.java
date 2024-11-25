@@ -1,13 +1,16 @@
 package com.dach.reservation_tool.parkinglot;
 
 
+import com.dach.reservation_tool.conference.dto.TimeRangeDto;
 import com.dach.reservation_tool.parkinglot.dto.ParkinglotCreateDto;
 import com.dach.reservation_tool.parkinglot.dto.ParkinglotResponseDto;
+import com.dach.reservation_tool.parkinglot.dto.ParkinglotTimeRangeDto;
 import com.dach.reservation_tool.parkinglot.dto.ParkinglotUpdateDto;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -26,6 +29,14 @@ public class ParkingLotController {
     public List<ParkinglotResponseDto> getAllReservations() {
         return service.getAllReservations();
     }
+
+    // Get all parkinglots with a certain date:
+    @GetMapping("/get-all-reservations-by-date")
+    public List<ParkinglotTimeRangeDto> getAllParkinglotsByDate(@RequestBody LocalDateTime date) {
+        return service.getAllParkinglotsByDate(date);
+    }
+
+
 
     // 2. Get a conference by ID
     @GetMapping("/{id}")
