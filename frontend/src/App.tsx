@@ -7,16 +7,15 @@ import { AppRoutes } from './AppRoutes.tsx';
 import './App.css'
 
 function App() {
-
   return (
-    <MantineProvider>
+      <MantineProvider>
         <BrowserRouter>
           <BaseLayout>
             <AppRoutes />
           </BaseLayout>
         </BrowserRouter>
-    </MantineProvider>
-  )
+      </MantineProvider>
+  );
 }
 
 export default App
