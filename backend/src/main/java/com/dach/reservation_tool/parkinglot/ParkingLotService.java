@@ -136,21 +136,6 @@ public class ParkingLotService {
     public Boolean doesCollide(ParkingLot parkingLot){
 
         List<ParkingLot> parkinglotList = repository.findAll();
-        int startHour = 0;
-        int endHour = switch (parkingLot.getTimeslot()) {
-            case NINE_TO_ONE -> {
-                startHour = 9;
-                yield 13;
-            }
-            case ONE_TO_FIVE -> {
-                startHour = 13;
-                yield 17;
-            }
-            case WHOLE_DAY -> {
-                startHour = 9;
-                yield 17;
-            }
-        };
         for (ParkingLot value : parkinglotList) {
             if (value.getDate().getYear() == parkingLot.getDate().getYear()
                 && value.getDate().getMonth() == parkingLot.getDate().getMonth()
