@@ -17,9 +17,15 @@ public class ReservationToolApplication {
 	public WebMvcConfigurer configure() {
 		return new WebMvcConfigurer() {
 			@Override
-			public void addCorsMappings(CorsRegistry reg) {
-				reg.addMapping("/**").allowedOrigins("http://localhost:5173");
+			public void addCorsMappings(CorsRegistry registry) {
+				registry.addMapping("/**") // Allow all endpoints
+						.allowedOrigins("http://localhost:5174") // Allow your frontend's origin
+						.allowedMethods("GET", "POST", "PUT", "DELETE") // Allowed HTTP methods
+						.allowedHeaders("*") // Allow all headers
+						.allowCredentials(true); // Allow cookies if needed
 			}
 		};
 	}
 }
+
+
