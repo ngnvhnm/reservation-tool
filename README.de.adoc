@@ -48,6 +48,17 @@ Die Anwendung verwendet Keycloak für eine sichere Benutzer-Authentifizierung un
 - https://www.keycloak.org/[Keycloak] für die Benutzer-Authentifizierung
 - https://www.docker.com/[Docker] für die Containerisierung
 
+== Die App zum Laufen bringen
+Zunächst sollte sichergestellt werden, dass Docker und Java (mindestens Version 21) installiert sind.
+
+* Zieh das Projekt von Github mit 'git clone xxx' (google bei Bedarf wie das geht).
+* Öffne dein Terminal und gehe zum 'reservation-tool' Ordner und dann zum backend mit 'cd backend'.
+* Öffne die Docker App und gehe dann zurück ins terminal und starte den Docker container mit 'docker-compose up -d' (das startet die Datenbank). Gehe wieder zurück zum 'reserveation-tool' Ordner mit 'cd ..'.
+* Starte das backend indem du den backend Ordner in deiner bevorzugten Entwicklungsumgebung öffnest und die main Klasse startest ('/src/main.java.com.dach.reservation_tool/ReservationToolApplication').
+* Gehe im Terminal zum frontend Ordner ('cd frontend') und starte das frontend mit dem Befehl 'npm i'.
+
+Jetzt sollte alles laufen. Du kannst das Frontend sehen indem du 'localhost:5174' in dein Browser tippst.
+
 == Abläufe
 
 === User Flow
