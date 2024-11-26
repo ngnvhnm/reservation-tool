@@ -3,6 +3,7 @@ package com.dach.reservation_tool.conference;
 import com.dach.reservation_tool.conference.dto.ConferenceCreateDto;
 import com.dach.reservation_tool.conference.dto.ConferenceResponseDto;
 import com.dach.reservation_tool.conference.dto.ConferenceUpdateDto;
+import com.dach.reservation_tool.conference.dto.TimeRangeDto;
 import net.fortuna.ical4j.util.RandomUidGenerator;
 import org.springframework.stereotype.Service;
 
@@ -35,6 +36,13 @@ public class ConferenceMapper {
                 entity.getConferenceType(),
                 entity.getTimeOfBooking(),
                 entity.getAttendeeList()
+        );
+    }
+
+    public TimeRangeDto toTimeRangeDTO(Conference entity) {
+        return new TimeRangeDto(
+                entity.getStartTime(),
+                entity.getEndTime()
         );
     }
 

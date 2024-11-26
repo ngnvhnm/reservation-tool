@@ -3,6 +3,7 @@ package com.dach.reservation_tool.conference;
 import com.dach.reservation_tool.conference.dto.ConferenceCreateDto;
 import com.dach.reservation_tool.conference.dto.ConferenceResponseDto;
 import com.dach.reservation_tool.conference.dto.ConferenceUpdateDto;
+import com.dach.reservation_tool.conference.dto.TimeRangeDto;
 import com.dach.reservation_tool.util.OneClient;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -45,11 +46,11 @@ public class ConferenceService {
     }
 
 
-    public List<ConferenceResponseDto> getAllConferencesByDate(LocalDateTime date) {
+    public List<TimeRangeDto> getAllConferencesByDate(LocalDateTime date) {
         int year = date.getYear();
         int dayOfMonth =  date.getDayOfMonth();
         return repository.findAllByDate(year,dayOfMonth).stream()
-                .map(mapper::toResponseDTO)
+                .map(mapper::toTimeRangeDTO)
                 .toList();
     }
 
