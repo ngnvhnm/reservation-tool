@@ -96,21 +96,11 @@ export const BookingsPage = () => {
     const body: CreateBookingTypeConferenceDto = {
       startTime:
         values.bookingDate && values.selectedStartTime
-          ? new Date(
-              values.bookingDate.setHours(
-                parseInt(values.selectedStartTime.split(':')[0]),
-                parseInt(values.selectedStartTime.split(':')[1]),
-              ),
-            )
+          ? getFullDateGMT1(values.bookingDate, values.selectedStartTime)
           : new Date(),
       endTime:
         values.bookingDate && values.selectedEndTime
-          ? new Date(
-              values.bookingDate.setHours(
-                parseInt(values.selectedEndTime.split(':')[0]),
-                parseInt(values.selectedEndTime.split(':')[1]),
-              ),
-            )
+          ? getFullDateGMT1(values.bookingDate, values.selectedEndTime)
           : new Date(),
       conferenceType: values.selectedItem ?? '',
       bookerEmail: 'test@gmail.com', // FIXME: Change to actual email
