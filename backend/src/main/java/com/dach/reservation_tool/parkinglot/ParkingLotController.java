@@ -76,4 +76,12 @@ public class ParkingLotController {
             return ResponseEntity.notFound().build();
         }
     }
+
+    // 6. Searches for the last reservation that has been booked by a certain user(defined by an email adress)
+    // and books the same reservation with a different startTime.
+    @PostMapping("/{mail}/recreateLast")
+    public ResponseEntity<String> recreateLastReservation(@PathVariable String mail,@RequestBody LocalDateTime date, @RequestBody TIMESLOT timeslot){
+        return service.recreateLastReservation(mail,date, timeslot);
+    }
+
 }

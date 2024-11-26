@@ -1,6 +1,5 @@
 package com.dach.reservation_tool.parkinglot;
 
-import com.dach.reservation_tool.conference.Conference;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
