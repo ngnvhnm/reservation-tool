@@ -2,8 +2,11 @@ package com.dach.reservation_tool.parkinglot;
 
 
 
+import com.dach.reservation_tool.conference.Conference;
+import com.dach.reservation_tool.conference.dto.TimeRangeDto;
 import com.dach.reservation_tool.parkinglot.dto.ParkinglotCreateDto;
 import com.dach.reservation_tool.parkinglot.dto.ParkinglotResponseDto;
+import com.dach.reservation_tool.parkinglot.dto.ParkinglotTimeRangeDto;
 import com.dach.reservation_tool.parkinglot.dto.ParkinglotUpdateDto;
 import net.fortuna.ical4j.util.RandomUidGenerator;
 import org.springframework.stereotype.Service;
@@ -86,6 +89,13 @@ public class ParkingLotMapper {
 
     private LocalDateTime mapTime(ParkingLot entity, int hour){
         return LocalDateTime.of(entity.getDate().getYear(), entity.getDate().getMonthValue(), entity.getDate().getDayOfMonth(), hour, 0);
+    }
+
+
+    public ParkinglotTimeRangeDto toParkinglotTimeRangeDTO(ParkingLot entity) {
+        return new ParkinglotTimeRangeDto(
+                entity.getTimeslot()
+        );
     }
 
 }

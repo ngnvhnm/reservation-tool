@@ -1,0 +1,52 @@
+
+
+
+### PLEASE COPY THIS FILE
+### INTO YOUR APPLICATION.YAML FILE
+### AND CHANGE ALL THE SECRETS
+
+
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/dachpc_db
+    username: dach123
+    password: dach123
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+
+
+credentials:
+  one:
+    conference:
+      og3:
+        username: "da-fp8-3og-besprechnung@dachpc.com"
+        password: "secret"
+        calPath: "/calendars/users/da-fp8-3og-besprechnung@dachpc.com/calendar/"
+    parking:
+      p12:
+        username: "da-fp8-1ug-parkplatz12@dachpc.com"
+        password: "secret"
+        calPath: "/calendars/users/da-fp8-1ug-parkplatz12@dachpc.com/calendar/"
+      p13:
+        username: "da-fp8-1ug-parkplatz13@dachpc.com"
+        password: "secret"
+        calPath: "/calendars/users/da-fp8-1ug-parkplatz13@dachpc.com/calendar/"
+      p14:
+        username: "da-fp8-1ug-parkplatz14@dachpc.com"
+        password: "secret"
+        calPath: "/calendars/users/da-fp8-1ug-parkplatz14@dachpc.com/calendar/"
+      p15:
+        username: "da-fp8-1ug-parkplatz15@dachpc.com"
+        password: "secret"
+        calPath: "/calendars/users/da-fp8-1ug-parkplatz15@dachpc.com/calendar/"
+      p16:
+        username: "da-fp8-1ug-parkplatz16@dachpc.com"
+        password: "secret"
+        calPath: "/calendars/users/da-fp8-1ug-parkplatz16@dachpc.com/calendar/"
+      p37:
+        username: "da-fp8-1ug-parkplatz37@dachpc.com"
+        password: "secret"
+        calPath: "/calendars/users/da-fp8-1ug-parkplatz37@dachpc.com/calendar/"
