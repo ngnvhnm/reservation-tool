@@ -38,7 +38,7 @@ The application leverages Keycloak for secure user authentication, allowing only
 == Technical Stack
 
 === Frontend
-- https://react.dev/[React]
+- https://react.dev/[React] + https://www.typescriptlang.org/[Typescript]
 - https://vite.dev/[Vite]
 - https://www.npmjs.com/[Node Package Manager (NPM)]
 - https://mantine.dev/[Mantine.ui]
@@ -51,16 +51,47 @@ The application leverages Keycloak for secure user authentication, allowing only
 - https://www.docker.com/[Docker] for containerization
 
 == How to start the app
-Before starting make sure you have Docker and Java (at least version 21) installed on your computer.
 
-* Clone this repository to your computer with 'git clone xxx' (google the instructions for cloning if necessary).
-* In the terminal go to the 'reservation-tool' folder and then to backend ('cd backend').
-* Open your Docker application and then go back to the terminal and run the docker-file with 'docker-compose up -d' (this will start the database) and then go back to the 'reservation-tool' folder ('cd ..').
-* Start the backend by opening the backend folder in your preferred IDE and run the main class ('/src/main.java.com.dach.reservation_tool/ReservationToolApplication').
-* In the terminal go to the frontend folder ('cd frontend') and run the frontend with 'npm i' (for installation) and then 'npm run dev'.
+=== Prerequisites
+- https://www.oracle.com/java/technologies/javase/jdk21-archive-downloads.html[Java 21] or higher
+- https://www.docker.com/products/docker-desktop[Docker]
+- Database Management System (DBMS) like Heidisql, DBeaver, or https://www.jetbrains.com/help/idea/connecting-to-a-database.html[IntelliJ Integrated Database Tool] or any other tool of your choice
 
-Now everything should be running. You can access the frontend by typing 'localhost:5174' in your browser.
+=== Starting the backend
+1. Open the terminal in the root directory of the project and navigate to the 'backend' folder and then start Docker:
 
+        cd backend/ && docker-compose up -d  && cd ..
+
+2. Start the backend by opening the 'backend' folder in your preferred IDE and run the main class `/src/main.java.com.dach.reservation_tool/ReservationToolApplication`. Preferably using https://www.jetbrains.com/idea/[IntelliJ IDEA].
+
+3. The server should now be running on `localhost:8080`. Make no other applications are using this port.
+
+4. If needed, you can manage the database with your preferred DBMS and configure the database connection in the `application.properties` file in the `backend/src/main/resources` folder.
+
+==== Configuring Keycloak
+1. Open your preferred browser and navigate to `localhost:8080/`.
+2. Log in with the following credentials:
+    - Username: `admin`
+    - Password: `admin`
+3. Import the realm, which can be found in the `backend` folder under `reservation-tool-realm.json`. Import the file into Keycloak to load the configuration.
+    - Go to `http://localhost:8084/admin/master/console/#/master/add-realm`
+    - Choose the file `reservation-tool-realm.json`, which should be found in the `backend` folder.
+    - Click `Create`.
+4. Finally, a user must be added to log in to the application.
+    - Go to `http://localhost:8084/admin/master/console/#/realms/reservation-tool/users`
+    - Click `Add User` and fill in the required fields.
+    - Click `Save`.
+
+=== Starting the frontend
+1. In the terminal, navigate to the 'frontend' folder and run the following commands:
+
+        cd frontend/ && npm i && npm run dev
+
+2. The frontend should now be running on `localhost:5173`. Make sure no other applications are using this port.
+
+=== Testing the application
+
+To verify that the application is working correctly, open your preferred browser and navigate to `localhost:5173` and open DevTools to check for any error messages.
 
 == Flows
 
