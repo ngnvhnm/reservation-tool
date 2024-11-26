@@ -4,6 +4,9 @@
 
 # Spring related files
 backend/target/**
+build/
+.gradle/
+.out
 
 # Environment
 .env
