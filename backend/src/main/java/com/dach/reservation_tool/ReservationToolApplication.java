@@ -19,8 +19,8 @@ public class ReservationToolApplication {
 			@Override
 			public void addCorsMappings(CorsRegistry registry) {
 				registry.addMapping("/**") // Allow all endpoints
-						.allowedOrigins("http://localhost:5174") // Allow your frontend's origin
-						.allowedMethods("GET", "POST", "PUT", "DELETE") // Allowed HTTP methods
+						.allowedOrigins("http://localhost:5173") // Allow your frontend's origin
+						.allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS") // Allowed HTTP methods
 						.allowedHeaders("*") // Allow all headers
 						.allowCredentials(true); // Allow cookies if needed
 			}
