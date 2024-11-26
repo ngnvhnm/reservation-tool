@@ -1,35 +1,34 @@
-import { Route, RouteProps, Routes, Navigate } from "react-router-dom";
+import { Route, RouteProps, Routes, Navigate } from 'react-router-dom';
 
 import { BookingsPage } from './pages/BookingsPage.tsx';
 import { SettingsPage } from './pages/SettingsPage.tsx';
 import { HistoryPage } from './pages/HistoryPage.tsx';
 
-
 export type RouteConfig = RouteProps & { path: string; isPrivate?: boolean };
 
 const routes: RouteConfig[] = [
   {
-    path: "/history",
+    path: '/history',
     isPrivate: false,
     element: <HistoryPage />,
   },
   {
-    path: "/booking",
+    path: '/booking',
     isPrivate: false,
     element: <BookingsPage />,
   },
   {
-    path: "/",
+    path: '/',
     isPrivate: false,
     element: <Navigate to="/booking" />,
     index: true,
   },
 
   {
-    path: "/settings",
+    path: '/settings',
     isPrivate: false,
     element: <SettingsPage />,
-  }
+  },
 ];
 const renderRouteMap = ({ element, ...restRoute }: RouteConfig) => {
   return <Route key={restRoute.path} element={element} {...restRoute} />;

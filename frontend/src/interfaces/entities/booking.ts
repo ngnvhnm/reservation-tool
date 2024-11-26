@@ -1,4 +1,3 @@
-
 type Status = 'ongoing' | 'finished' | 'cancelled';
 
 export default interface Booking {

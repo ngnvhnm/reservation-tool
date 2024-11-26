@@ -6,38 +6,35 @@ import { getColor } from '../utils/utils.ts';
 import { getDateOnly, getHourAndMinutes } from '../utils/date-formater.ts';
 
 export const HistoryPage = () => {
-
   const [bookings, setBookings] = React.useState<Booking[]>([]);
 
   React.useEffect(() => {
     const fetchData = () => {
       // const response = await fetch('http://localhost:3001/contracts');
       // const data = await response.json();
-      setBookings(
-        [
-          {
-            id: "1",
-            startDate: new Date('2021-08-14T10:00:00'),
-            endDate: new Date('2021-08-14T12:00:00'),
-            status: 'finished',
-            bookingType: 'conference-room-2',
-          },
-          {
-            id: '3',
-            startDate: new Date('2021-08-14T10:00:00'),
-            endDate: new Date('2021-08-14T12:00:00'),
-            status: 'cancelled',
-            bookingType: 'conference-room-3',
-          },
-          {
-            id: '3',
-            startDate: new Date('2021-08-14T10:00:00'),
-            endDate: new Date('2021-08-14T12:00:00'),
-            status: 'ongoing',
-            bookingType: 'conference-room-3',
-          },
-        ]
-      );
+      setBookings([
+        {
+          id: '1',
+          startDate: new Date('2021-08-14T10:00:00'),
+          endDate: new Date('2021-08-14T12:00:00'),
+          status: 'finished',
+          bookingType: 'conference-room-2',
+        },
+        {
+          id: '3',
+          startDate: new Date('2021-08-14T10:00:00'),
+          endDate: new Date('2021-08-14T12:00:00'),
+          status: 'cancelled',
+          bookingType: 'conference-room-3',
+        },
+        {
+          id: '3',
+          startDate: new Date('2021-08-14T10:00:00'),
+          endDate: new Date('2021-08-14T12:00:00'),
+          status: 'ongoing',
+          bookingType: 'conference-room-3',
+        },
+      ]);
     };
     fetchData();
   }, []);
@@ -70,9 +67,8 @@ export const HistoryPage = () => {
           </Stack>
         </Stack>
       </Card>
-
-    )
-  }
+    );
+  };
 
   return (
     <Container py={30}>
@@ -88,6 +84,6 @@ export const HistoryPage = () => {
       </Stack>
     </Container>
   );
-}
+};
 
 export default HistoryPage;

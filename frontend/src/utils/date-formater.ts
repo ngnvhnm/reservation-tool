@@ -16,6 +16,6 @@ const getHourAndMinutes = (date: Date): string => {
   const minutes = date.getMinutes().toString().padStart(2, '0');
 
   return `${hour}:${minutes}`;
-}
+};
 
 export { getDateOnly, getHourAndMinutes };
