@@ -55,7 +55,7 @@ Zunächst sollte sichergestellt werden, dass Docker und Java (mindestens Version
 * Öffne dein Terminal und gehe zum 'reservation-tool' Ordner und dann zum backend mit 'cd backend'.
 * Öffne die Docker App und gehe dann zurück ins terminal und starte den Docker container mit 'docker-compose up -d' (das startet die Datenbank). Gehe wieder zurück zum 'reserveation-tool' Ordner mit 'cd ..'.
 * Starte das backend indem du den backend Ordner in deiner bevorzugten Entwicklungsumgebung öffnest und die main Klasse startest ('/src/main.java.com.dach.reservation_tool/ReservationToolApplication').
-* Gehe im Terminal zum frontend Ordner ('cd frontend') und starte das frontend mit dem Befehl 'npm i'.
+* Gehe im Terminal zum frontend Ordner ('cd frontend') und starte das frontend mit dem Befehl 'npm i' (für die Installation) aund dann 'npm run dev'.
 
 Jetzt sollte alles laufen. Du kannst das Frontend sehen indem du 'localhost:5174' in dein Browser tippst.
 
