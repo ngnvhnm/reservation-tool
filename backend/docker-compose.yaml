@@ -4,7 +4,6 @@ services:
     command:
       - start-dev
       - --http-port=8084
-      - --import-realm
     restart: "on-failure"
     environment:
       KEYCLOAK_ADMIN: admin
