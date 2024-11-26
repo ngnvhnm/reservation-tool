@@ -17,6 +17,8 @@ import {
   createBookingTypeConference,
   CreateBookingTypeConferenceDto,
 } from '../utils/api/api-conference.ts';
+import { getFullDateGMT1 } from '../utils/date-formater.ts';
+import { notifications } from '@mantine/notifications';
 
 type FormValues = {
   bookingDate: Date | null;
@@ -109,10 +111,25 @@ export const BookingsPage = () => {
 
     createBookingTypeConference(body)
       .then(() => {
+        // TODO: Create util for this, make more abstraction
         console.log('Booking created');
+        notifications.show({
+          title: 'Success',
+          message: 'Booking created successfully',
+          color: 'green',
+        });
       })
       .catch((error) => {
+        // TODO: Create util for this, make more abstraction
         console.error(error);
+        notifications.show({
+          title: 'Error',
+          message: error.message,
+          color: 'red',
+        });
+      })
+      .finally(() => {
+        form.reset();
       });
   };
 

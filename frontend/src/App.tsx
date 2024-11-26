@@ -1,19 +1,23 @@
 import '@mantine/core/styles.css';
 import '@mantine/dates/styles.css';
+import '@mantine/notifications/styles.css';
+import './App.css';
 import { MantineProvider } from '@mantine/core';
 import { BrowserRouter } from 'react-router-dom';
 import { BaseLayout } from './layout/BaseLayout.tsx';
 import { AppRoutes } from './AppRoutes.tsx';
-import './App.css';
+import { NotificationProvider } from './providers/notification/Notification.Provider..tsx';
 
 function App() {
   return (
     <MantineProvider>
-      <BrowserRouter>
-        <BaseLayout>
-          <AppRoutes />
-        </BaseLayout>
-      </BrowserRouter>
+      <NotificationProvider>
+        <BrowserRouter>
+          <BaseLayout>
+            <AppRoutes />
+          </BaseLayout>
+        </BrowserRouter>
+      </NotificationProvider>
     </MantineProvider>
   );
 }

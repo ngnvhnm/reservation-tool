@@ -4,7 +4,7 @@ import { IconLogout } from '@tabler/icons-react';
 import { Button, Container, Group, Image, Tabs, useMantineTheme } from '@mantine/core';
 import classes from './Header.module.css';
 import keycloak from '../../providers/authentication/keycloak.ts';
-
+import { notifications } from '@mantine/notifications';
 const tabs = ['booking', 'history', 'settings'];
 
 export function Header() {
@@ -41,6 +41,17 @@ export function Header() {
             }}
           >
             Logout
+          </Button>
+
+          <Button
+            onClick={() =>
+              notifications.show({
+                title: 'Default notification',
+                message: 'Do not forget to star Mantine on GitHub! 🌟',
+              })
+            }
+          >
+            Show notification
           </Button>
         </Group>
       </Container>
