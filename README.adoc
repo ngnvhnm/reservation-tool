@@ -91,7 +91,7 @@ The application leverages Keycloak for secure user authentication, allowing only
 
 === Testing the application
 
-To verify that the application is working correctly, open your preferred browser and navigate to `localhost:5173` and open DevTools to check for any error messages.
+To verify that the application is working correctly, open your preferred browser and navigate to `localhost:5173` and you should be redirected to Keycloak to log in. Open DevTools to look for any error messages.
 
 == Flows
 

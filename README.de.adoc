@@ -89,7 +89,7 @@ Die Anwendung verwendet Keycloak für eine sichere Benutzer-Authentifizierung un
 2. Das Frontend sollte nun unter `localhost:5173` erreichbar sein, stellt sicher das kein anderes Programm auf diesem Port läuft.
 
 === Anwendung testen
-Um zu überprüfen, ob die Anwendung korrekt funktioniert, öffne deinen bevorzugten Browser und navigiere zu `localhost:5173` und DevTools öffnen, um eventuelle Fehlermeldungen zu überprüfen.
+Um zu überprüfen, ob die Anwendung korrekt funktioniert, öffne deinen bevorzugten Browser und navigiere zu `localhost:5173`, du solltest an Keycloak weitergeleitet werden, um dich anzumelden. Öffne DevTools, um nach Fehlermeldungen zu suchen.
 
 == Abläufe
 
