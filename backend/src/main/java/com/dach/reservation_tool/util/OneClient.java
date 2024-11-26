@@ -142,11 +142,11 @@ public class OneClient {
         return credMap;
     }
 
-    public void createEventForConference(ConferenceCreateDto createDto, Uid uid, List<String> attendeeList, String title) {
+    public boolean createEventForConference(ConferenceCreateDto createDto, Uid uid, List<String> attendeeList, String title) {
 
         var credentials = getCredentialsForConference(createDto.conferenceType());
         if (credentials == null) {
-            return;
+            return false;
         }
 
         CredentialsProvider credentialsProvider = new BasicCredentialsProvider();
@@ -201,6 +201,7 @@ public class OneClient {
 
                 if (putMethod.succeeded(response)) {
                     System.out.println("Event created");
+                    return true;
 
                 } else {
                     System.out.println("Failed to create event.");
@@ -216,12 +217,13 @@ public class OneClient {
             System.err.println("Client Setup Error: " + e.getMessage());
             e.printStackTrace();
         }
+        return false;
     }
 
-    public void deleteEventForConference(Uid uid, CONF_TYPE type) {
+    public boolean deleteEventForConference(Uid uid, CONF_TYPE type) {
         var credentials = getCredentialsForConference(type);
         if (credentials == null) {
-            return;
+            return false;
         }
 
         CredentialsProvider credentialsProvider = new BasicCredentialsProvider();
@@ -243,6 +245,7 @@ public class OneClient {
 
                 if (deleteMethod.succeeded(response)) {
                     System.out.println("Event deleted");
+                    return true;
                 }
                 else {
                     System.out.println("Failed to create event.");
@@ -257,12 +260,13 @@ public class OneClient {
             System.err.println("Client Setup Error: " + e.getMessage());
             e.printStackTrace();
         }
+        return false;
     }
 
-    public void editEventForConference(ConferenceUpdateDto updateDto, List<String> attendeeList ,CONF_TYPE type, Uid uid, String bookerEmail, String title) {
+    public boolean editEventForConference(ConferenceUpdateDto updateDto, List<String> attendeeList ,CONF_TYPE type, Uid uid, String bookerEmail, String title) {
         var credentials = getCredentialsForConference(type);
         if (credentials == null) {
-            return;
+            return false;
         }
 
         CredentialsProvider credentialsProvider = new BasicCredentialsProvider();
@@ -321,7 +325,7 @@ public class OneClient {
 
                 if (putMethod.succeeded(response)) {
                     System.out.println("Event edited");
-
+                    return true;
                 } else {
                     System.out.println("Failed to edit event.");
                     System.out.println("Status Code: " + response.getStatusLine().getStatusCode());
@@ -335,172 +339,177 @@ public class OneClient {
             System.err.println("Client Setup Error: " + e.getMessage());
             e.printStackTrace();
         }
-
+        return false;
     }
 
-//    public void createEventForParking(ParkinglotCreateDto createDto, Uid uid, String title) {
-//        var credentials = getCredentialsForParking(createDto.parkinglotNumber());
-//        if (credentials == null) {
-//            return;
-//        }
-//
-//        CredentialsProvider credentialsProvider = new BasicCredentialsProvider();
-//        credentialsProvider.setCredentials(
-//                new AuthScope(URI.create(CALDAV_BASE_URL).getHost(), 443),
-//                new UsernamePasswordCredentials(credentials.get("username"), credentials.get("password"))
-//        );
-//
-//        try (CloseableHttpClient httpClient = HttpClients.custom()
-//                .setDefaultCredentialsProvider(credentialsProvider)
-//                .build()) {
-//
-//            Date startDateConverted = Date.from(createDto.startTime().atZone(ZoneId.systemDefault()).toInstant());
-//            Date endDateConverted = Date.from(createDto.endTime().atZone(ZoneId.systemDefault()).toInstant());
-//
-//            DateTime startDateTime = new DateTime(startDateConverted);
-//            DateTime endDateTime = new DateTime(endDateConverted);
-//
-//            VEvent event = new VEvent(new DateTime(startDateTime), new DateTime(endDateTime), title);
-//            event.getProperties().add(uid);
-//
-//            Organizer organizer = new Organizer(URI.create("mailto:" + credentials.get("username")));
-//            organizer.getParameters().add(PartStat.ACCEPTED);
-//            organizer.getParameters().add(new Cn(credentials.get("username")));
-//            event.getProperties().add(organizer);
-//
-//            Attendee parkBooker = new Attendee(URI.create("mailto:" + createDto.bookerEmail()));
-//            parkBooker.getParameters().add(new Cn(createDto.bookerEmail()));
-//            parkBooker.getParameters().add(PartStat.ACCEPTED);
-//            event.getProperties().add(parkBooker);
-//
-//            CalendarRequest calendarRequest = new CalendarRequest();
-//            calendarRequest.setCalendar(event);
-//
-//            CalendarOutputter calendarOutputter = new CalendarOutputter();
-//            calendarOutputter.setValidating(true);
-//
-//            String eventUrl = CALDAV_BASE_URL + credentials.get("calPath") + uid.getValue() + ".ics";
-//
-//            HttpPutMethod putMethod = new HttpPutMethod(eventUrl, calendarRequest, calendarOutputter);
-//
-//            try {
-//                HttpResponse response = httpClient.execute(putMethod);
-//
-//                if (putMethod.succeeded(response)) {
-//                    System.out.println("Event created");
-//
-//                } else {
-//                    System.out.println("Failed to create event.");
-//                    System.out.println("Status Code: " + response.getStatusLine().getStatusCode());
-//                    System.out.println("Status Message: " + response.getStatusLine().getReasonPhrase());
-//                }
-//            } catch (IOException e) {
-//                System.err.println("Error fetching events: " + e.getMessage());
-//                e.printStackTrace();
-//            }
-//
-//        } catch (IOException e) {
-//            System.err.println("Client Setup Error: " + e.getMessage());
-//        }
-//    }
-//
-//    public void deleteEventForParking(Uid uid, PARKINGLOT_NUMBER number) {
-//        var credentials = getCredentialsForParking(number);
-//        if (credentials == null) {
-//            return;
-//        }
-//
-//        CredentialsProvider credentialsProvider = new BasicCredentialsProvider();
-//        credentialsProvider.setCredentials(
-//                new AuthScope(URI.create(CALDAV_BASE_URL).getHost(), 443),
-//                new UsernamePasswordCredentials(credentials.get("username"), credentials.get("password"))
-//        );
-//
-//        try (CloseableHttpClient httpClient = HttpClients.custom()
-//                .setDefaultCredentialsProvider(credentialsProvider)
-//                .build()) {
-//
-//            var deleteUrl = CALDAV_BASE_URL + credentials.get("calPath") + uid.getValue() + ".ics";
-//
-//            HttpDeleteMethod deleteMethod = new HttpDeleteMethod(deleteUrl);
-//
-//            try {
-//                HttpResponse response = httpClient.execute(deleteMethod);
-//
-//                if (deleteMethod.succeeded(response)) {
-//                    System.out.println("Event deleted");
-//                }
-//                else {
-//                    System.out.println("Failed to create event.");
-//                    System.out.println("Status Code: " + response.getStatusLine().getStatusCode());
-//                    System.out.println("Status Message: " + response.getStatusLine().getReasonPhrase());
-//                }
-//            } catch (IOException e) {
-//                System.err.println("Error fetching events: " + e.getMessage());
-//                e.printStackTrace();
-//            }
-//        } catch (IOException e) {
-//            System.err.println("Client Setup Error: " + e.getMessage());
-//            e.printStackTrace();
-//        }
-//    }
-//
-//    public void editEventForParking(ParkinglotUpdateDto updateDto, PARKINGLOT_NUMBER number, Uid uid, String title) {
-//        var credentials = getCredentialsForParking(number);
-//        if (credentials == null) {
-//            return;
-//        }
-//        CredentialsProvider credentialsProvider = new BasicCredentialsProvider();
-//        credentialsProvider.setCredentials(
-//                new AuthScope(URI.create(CALDAV_BASE_URL).getHost(), 443),
-//                new UsernamePasswordCredentials(credentials.get("username"), credentials.get("password"))
-//        );
-//
-//        try (CloseableHttpClient httpClient = HttpClients.custom()
-//                .setDefaultCredentialsProvider(credentialsProvider)
-//                .build()) {
-//
-//            Date startDateConverted = Date.from(updateDto.startTime().atZone(ZoneId.systemDefault()).toInstant());
-//            Date endDateConverted = Date.from(updateDto.endTime().atZone(ZoneId.systemDefault()).toInstant());
-//
-//            DateTime startDateTime = new DateTime(startDateConverted);
-//            DateTime endDateTime = new DateTime(endDateConverted);
-//
-//            VEvent event = new VEvent(new DateTime(startDateTime), new DateTime(endDateTime), title);
-//
-//            event.getProperties().add(uid);
-//
-//            CalendarRequest calendarRequest = new CalendarRequest();
-//            calendarRequest.setCalendar(event);
-//
-//            CalendarOutputter calendarOutputter = new CalendarOutputter();
-//            calendarOutputter.setValidating(true);
-//
-//            String eventUrl = CALDAV_BASE_URL + credentials.get("calPath") + uid.getValue() + ".ics";
-//
-//            HttpPutMethod putMethod = new HttpPutMethod(eventUrl, calendarRequest, calendarOutputter);
-//
-//            try {
-//                HttpResponse response = httpClient.execute(putMethod);
-//
-//                if (putMethod.succeeded(response)) {
-//                    System.out.println("Event created");
-//
-//                } else {
-//                    System.out.println("Failed to create event.");
-//                    System.out.println("Status Code: " + response.getStatusLine().getStatusCode());
-//                    System.out.println("Status Message: " + response.getStatusLine().getReasonPhrase());
-//                }
-//            } catch (IOException e) {
-//                System.err.println("Error fetching events: " + e.getMessage());
-//                e.printStackTrace();
-//            }
-//
-//        } catch (IOException e) {
-//            System.err.println("Client Setup Error: " + e.getMessage());
-//        }
-//
-//    }
+    public boolean createEventForParking(ParkinglotCreateDto createDto, Uid uid, String title) {
+        var credentials = getCredentialsForParking(createDto.parkinglotNumber());
+        if (credentials == null) {
+            return false;
+        }
+
+        CredentialsProvider credentialsProvider = new BasicCredentialsProvider();
+        credentialsProvider.setCredentials(
+                new AuthScope(URI.create(CALDAV_BASE_URL).getHost(), 443),
+                new UsernamePasswordCredentials(credentials.get("username"), credentials.get("password"))
+        );
+
+        try (CloseableHttpClient httpClient = HttpClients.custom()
+                .setDefaultCredentialsProvider(credentialsProvider)
+                .build()) {
+
+            Date startDateConverted = Date.from(createDto.startTime().atZone(ZoneId.systemDefault()).toInstant());
+            Date endDateConverted = Date.from(createDto.endTime().atZone(ZoneId.systemDefault()).toInstant());
+
+            DateTime startDateTime = new DateTime(startDateConverted);
+            DateTime endDateTime = new DateTime(endDateConverted);
+
+            VEvent event = new VEvent(new DateTime(startDateTime), new DateTime(endDateTime), title);
+            event.getProperties().add(uid);
+
+            Organizer organizer = new Organizer(URI.create("mailto:" + credentials.get("username")));
+            organizer.getParameters().add(PartStat.ACCEPTED);
+            organizer.getParameters().add(new Cn(credentials.get("username")));
+            event.getProperties().add(organizer);
+
+            Attendee parkBooker = new Attendee(URI.create("mailto:" + createDto.bookerEmail()));
+            parkBooker.getParameters().add(new Cn(createDto.bookerEmail()));
+            parkBooker.getParameters().add(PartStat.ACCEPTED);
+            event.getProperties().add(parkBooker);
+
+            CalendarRequest calendarRequest = new CalendarRequest();
+            calendarRequest.setCalendar(event);
+
+            CalendarOutputter calendarOutputter = new CalendarOutputter();
+            calendarOutputter.setValidating(true);
+
+            String eventUrl = CALDAV_BASE_URL + credentials.get("calPath") + uid.getValue() + ".ics";
+
+            HttpPutMethod putMethod = new HttpPutMethod(eventUrl, calendarRequest, calendarOutputter);
+
+            try {
+                HttpResponse response = httpClient.execute(putMethod);
+
+                if (putMethod.succeeded(response)) {
+                    System.out.println("Event created");
+                    return true;
+                } else {
+                    System.out.println("Failed to create event.");
+                    System.out.println("Status Code: " + response.getStatusLine().getStatusCode());
+                    System.out.println("Status Message: " + response.getStatusLine().getReasonPhrase());
+                }
+            } catch (IOException e) {
+                System.err.println("Error fetching events: " + e.getMessage());
+                e.printStackTrace();
+            }
+
+        } catch (IOException e) {
+            System.err.println("Client Setup Error: " + e.getMessage());
+        }
+
+        return false;
+    }
+
+    public boolean deleteEventForParking(Uid uid, PARKINGLOT_NUMBER number) {
+        var credentials = getCredentialsForParking(number);
+        if (credentials == null) {
+            return false;
+        }
+
+        CredentialsProvider credentialsProvider = new BasicCredentialsProvider();
+        credentialsProvider.setCredentials(
+                new AuthScope(URI.create(CALDAV_BASE_URL).getHost(), 443),
+                new UsernamePasswordCredentials(credentials.get("username"), credentials.get("password"))
+        );
+
+        try (CloseableHttpClient httpClient = HttpClients.custom()
+                .setDefaultCredentialsProvider(credentialsProvider)
+                .build()) {
+
+            var deleteUrl = CALDAV_BASE_URL + credentials.get("calPath") + uid.getValue() + ".ics";
+
+            HttpDeleteMethod deleteMethod = new HttpDeleteMethod(deleteUrl);
+
+            try {
+                HttpResponse response = httpClient.execute(deleteMethod);
+
+                if (deleteMethod.succeeded(response)) {
+                    System.out.println("Event deleted");
+                    return true;
+                }
+                else {
+                    System.out.println("Failed to create event.");
+                    System.out.println("Status Code: " + response.getStatusLine().getStatusCode());
+                    System.out.println("Status Message: " + response.getStatusLine().getReasonPhrase());
+                }
+            } catch (IOException e) {
+                System.err.println("Error fetching events: " + e.getMessage());
+                e.printStackTrace();
+            }
+        } catch (IOException e) {
+            System.err.println("Client Setup Error: " + e.getMessage());
+            e.printStackTrace();
+        }
+
+        return false;
+    }
+
+    public boolean editEventForParking(ParkinglotUpdateDto updateDto, PARKINGLOT_NUMBER number, Uid uid, String title) {
+        var credentials = getCredentialsForParking(number);
+        if (credentials == null) {
+            return false;
+        }
+        CredentialsProvider credentialsProvider = new BasicCredentialsProvider();
+        credentialsProvider.setCredentials(
+                new AuthScope(URI.create(CALDAV_BASE_URL).getHost(), 443),
+                new UsernamePasswordCredentials(credentials.get("username"), credentials.get("password"))
+        );
+
+        try (CloseableHttpClient httpClient = HttpClients.custom()
+                .setDefaultCredentialsProvider(credentialsProvider)
+                .build()) {
+
+            Date startDateConverted = Date.from(updateDto.startTime().atZone(ZoneId.systemDefault()).toInstant());
+            Date endDateConverted = Date.from(updateDto.endTime().atZone(ZoneId.systemDefault()).toInstant());
+
+            DateTime startDateTime = new DateTime(startDateConverted);
+            DateTime endDateTime = new DateTime(endDateConverted);
+
+            VEvent event = new VEvent(new DateTime(startDateTime), new DateTime(endDateTime), title);
+
+            event.getProperties().add(uid);
+
+            CalendarRequest calendarRequest = new CalendarRequest();
+            calendarRequest.setCalendar(event);
+
+            CalendarOutputter calendarOutputter = new CalendarOutputter();
+            calendarOutputter.setValidating(true);
+
+            String eventUrl = CALDAV_BASE_URL + credentials.get("calPath") + uid.getValue() + ".ics";
+
+            HttpPutMethod putMethod = new HttpPutMethod(eventUrl, calendarRequest, calendarOutputter);
+
+            try {
+                HttpResponse response = httpClient.execute(putMethod);
+
+                if (putMethod.succeeded(response)) {
+                    System.out.println("Event created");
+                    return true;
+                } else {
+                    System.out.println("Failed to create event.");
+                    System.out.println("Status Code: " + response.getStatusLine().getStatusCode());
+                    System.out.println("Status Message: " + response.getStatusLine().getReasonPhrase());
+                }
+            } catch (IOException e) {
+                System.err.println("Error fetching events: " + e.getMessage());
+                e.printStackTrace();
+            }
+
+        } catch (IOException e) {
+            System.err.println("Client Setup Error: " + e.getMessage());
+        }
+        return false;
+    }
 
 
 

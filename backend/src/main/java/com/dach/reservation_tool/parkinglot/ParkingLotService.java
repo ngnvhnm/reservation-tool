@@ -5,23 +5,24 @@ import com.dach.reservation_tool.parkinglot.dto.ParkinglotCreateDto;
 import com.dach.reservation_tool.parkinglot.dto.ParkinglotResponseDto;
 import com.dach.reservation_tool.parkinglot.dto.ParkinglotTimeRangeDto;
 import com.dach.reservation_tool.parkinglot.dto.ParkinglotUpdateDto;
+import com.dach.reservation_tool.util.OneClient;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 public class ParkingLotService {
     private final ParkingLotRepository repository;
     private final ParkingLotMapper mapper;
+    private final OneClient oneClient;
 
-    public ParkingLotService(ParkingLotRepository repository, ParkingLotMapper mapper) {
+    public ParkingLotService(ParkingLotRepository repository, ParkingLotMapper mapper, OneClient oneClient) {
         this.repository = repository;
         this.mapper = mapper;
+        this.oneClient = oneClient;
     }
 
     public List<ParkinglotResponseDto> getAllReservations() {
@@ -49,6 +50,8 @@ public class ParkingLotService {
 
     public ParkinglotResponseDto createReservation(ParkinglotCreateDto createDto) {
         ParkingLot parkingLot = mapper.toEntity(createDto);
+        oneClient.createEventForParking(createDto, parkingLot.getCalendarId(),
+                createDto.parkinglotNumber().toString() + "booked by " + createDto.bookerEmail());
         ParkingLot savedReservation = repository.save(parkingLot);
         return mapper.toResponseDTO(savedReservation);
     }
@@ -57,6 +60,12 @@ public class ParkingLotService {
         return repository.findById(id)
                 .map(existingReservation -> {
                     ParkingLot updatedReservation = mapper.updateEntity(existingReservation, updateDto);
+                    oneClient.editEventForParking(updateDto,
+                            existingReservation.getParkingLotNumber(),
+                            updatedReservation.getCalendarId(),
+                            existingReservation.getParkingLotNumber().toString()
+                                    + "booked by "
+                                    + existingReservation.getBookerEmail());
                     ParkingLot savedReservation = repository.save(updatedReservation);
                     return mapper.toResponseDTO(savedReservation);
                 })
@@ -65,6 +74,9 @@ public class ParkingLotService {
 
     public void deleteReservation(UUID id) {
         if (repository.existsById(id)) {
+            var deletedEvent = repository.findById(id);
+            oneClient.deleteEventForParking(deletedEvent.orElseThrow().getCalendarId(),
+                    deletedEvent.orElseThrow().getParkingLotNumber());
             repository.deleteById(id);
         } else {
             throw new IllegalArgumentException("Reservation not found with ID: " + id);

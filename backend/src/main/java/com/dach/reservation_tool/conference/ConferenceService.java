@@ -82,12 +82,19 @@ public class ConferenceService {
         }
 
         if (!this.doesCollide(conference)) {
-            oneClient.createEventForConference(createDto,
+            var isCreated = oneClient.createEventForConference(createDto,
                     conference.getCalendarId(),
-                    Arrays.stream(createDto.attendeeList().split(",")).toList(),
+                    Arrays.stream(createDto.attendeeList().split(","))
+                            .map(String::trim)
+                            .toList(),
                     "Conference room booked by " + createDto.bookerEmail());
-            repository.save(conference);
-            return ResponseEntity.ok("Das Event wurde erfolgreich erstellt");
+            if (isCreated) {
+                repository.save(conference);
+                return ResponseEntity.ok("Das Event wurde erfolgreich erstellt");
+            }
+            else {
+                return ResponseEntity.status(HttpStatus.CONFLICT).body("Das Event wurde noch nicht in One Calendar erstellt");
+            }
         }
         else {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Zu dem gewünschten Zeitpunkt existiert bereits eine Reservierung");  //Muss was besseres hin
@@ -101,24 +108,30 @@ public class ConferenceService {
 
 
 
-    public ConferenceResponseDto updateConference(UUID id, ConferenceUpdateDto updateDto) {
+    public ResponseEntity<String> updateConference(UUID id, ConferenceUpdateDto updateDto) {
+        boolean isUpdated = false;
         if (repository.existsById(id)) {
             var list = updateDto.attendeeList() == null ? null : updateDto.attendeeList();
             var oldConf = repository.findById(id);
-            oneClient.editEventForConference(updateDto,
+            isUpdated = oneClient.editEventForConference(updateDto,
                     Collections.singletonList(list),
                     oldConf.orElseThrow().getConferenceType(),
                     oldConf.get().getCalendarId(),
                     oldConf.orElseThrow().getBookerEmail(),
                     "Conference room details updated by " + oldConf.orElseThrow().getBookerEmail());
         }
-        return repository.findById(id)
-                .map(existingConference -> {
-                    Conference updatedConference = mapper.updateEntity(existingConference, updateDto);
-                    Conference savedConference = repository.save(updatedConference);
-                    return mapper.toResponseDTO(savedConference);
-                })
-                .orElseThrow(() -> new IllegalArgumentException("Conference not found with ID: " + id));
+        if (isUpdated) {
+            return repository.findById(id)
+                    .map(existingConference -> {
+                        Conference updatedConference = mapper.updateEntity(existingConference, updateDto);
+                        repository.save(updatedConference);
+                        return ResponseEntity.ok("Event is successfully updated");
+                    })
+                    .orElseThrow(() -> new IllegalArgumentException("Conference not found with ID: " + id));
+        }
+        else {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("The event is not updated in One Calendar");
+        }
     }
 
 
@@ -129,11 +142,18 @@ public class ConferenceService {
 
 
 
-    public void deleteConference(UUID id) {
+    public ResponseEntity<String> deleteConference(UUID id) {
         if (repository.existsById(id)) {
             var conference = repository.findById(id);
-            oneClient.deleteEventForConference(conference.orElseThrow().getCalendarId(), conference.get().getConferenceType());
-            repository.deleteById(id);
+            var isDeleted =
+                    oneClient.deleteEventForConference(conference.orElseThrow().getCalendarId(), conference.get().getConferenceType());
+            if (isDeleted) {
+                repository.deleteById(id);
+                return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Event is successfully deleted");
+            }
+            else {
+                return ResponseEntity.status(HttpStatus.CONFLICT).body("The event is not deleted in One Calendar");
+            }
         } else {
             throw new IllegalArgumentException("Conference not found with ID: " + id);
         }

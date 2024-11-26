@@ -58,8 +58,7 @@ public class ConferenceController {
     // 3. Create a new conference
     @PostMapping("/create-event")
     public ResponseEntity<String> createConference(@RequestBody @Valid ConferenceCreateDto createDto) {
-        ResponseEntity<String> responseBody = service.createConference(createDto);
-        return responseBody;
+        return service.createConference(createDto);
     }
 
 
@@ -69,12 +68,12 @@ public class ConferenceController {
 
     // 4. Update an existing conference
     @PutMapping("/{id}")
-    public ResponseEntity<ConferenceResponseDto> updateConference(
+    public ResponseEntity<String> updateConference(
             @PathVariable UUID id,
             @RequestBody ConferenceUpdateDto updateDto) {
         try {
-            ConferenceResponseDto responseDto = service.updateConference(id, updateDto);
-            return ResponseEntity.ok(responseDto);
+            return service.updateConference(id, updateDto);
+
         } catch (IllegalArgumentException ex) {
             return ResponseEntity.notFound().build();
         }
@@ -87,13 +86,12 @@ public class ConferenceController {
 
     // 5. Delete a conference
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteConference(@PathVariable UUID id) {
-        try {
-            service.deleteConference(id);
-            return ResponseEntity.noContent().build();
-        } catch (IllegalArgumentException ex) {
-            return ResponseEntity.notFound().build();
-        }
+    public ResponseEntity<String> deleteConference(@PathVariable UUID id) {
+            try {
+                return service.deleteConference(id);
+            } catch (IllegalArgumentException ex) {
+                return ResponseEntity.notFound().build();
+            }
     }
 
 
@@ -108,14 +106,4 @@ public class ConferenceController {
     }
 
 
-
-
-
-
-//    @GetMapping("/time-range")
-//    public ResponseEntity<List<ConferenceResponseDto>> getConferencesByTimeRange(
-//            @RequestBody @Valid TimeRangeDto timeRangeDto) {
-//        List<ConferenceResponseDto> responseDtos = service.getConferencesByTimeRange(timeRangeDto);
-//        return ResponseEntity.ok(responseDtos);
-//    }
 }
