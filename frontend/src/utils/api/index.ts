@@ -1,4 +1,5 @@
 import loadEnv from '../load-env';
+import keycloak from '../../providers/authentication/keycloak.ts';
 
 export interface Message {
   success: boolean;
@@ -6,13 +7,13 @@ export interface Message {
 }
 
 export const headers = async () => {
-  const token = 'testToken';
+  const token = keycloak.idToken ?? 'No token found';
   if (!token) {
     console.warn('No token found');
   }
   return {
     'Content-Type': 'application/json',
-    // Authorization: `Bearer ${token}`, // TODO: Add keycloak token for authorization
+    Authorization: `Bearer ${token}`,
   };
 };
 

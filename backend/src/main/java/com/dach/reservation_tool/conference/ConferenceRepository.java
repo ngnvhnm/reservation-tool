@@ -17,8 +17,8 @@ public interface ConferenceRepository extends JpaRepository<Conference, UUID> {
     List<Conference> findByMail(@Param("mail") String mail);
 
 
-    @Query("SELECT t FROM Conference t WHERE YEAR(t.startTime) =:year AND DAY(t.startTime) =:dayOfMonth")
-    List<Conference> findAllByDate(@Param("year") int year,@Param("dayOfMonth") int dayOfMonth);
+    @Query("SELECT t FROM Conference t WHERE YEAR(t.startTime) =:year AND DAY(t.startTime) =:dayOfMonth AND t.conferenceType =:type")
+    List<Conference> findAllByDate(@Param("year") int year,@Param("dayOfMonth") int dayOfMonth, @Param("type") CONF_TYPE type);
 
 
 //    @Query("SELECT t FROM Transaction t WHERE t.senderId =: id OR t.receiverId =:id")

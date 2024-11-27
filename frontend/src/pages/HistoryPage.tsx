@@ -1,68 +1,53 @@
-import { Badge, Card, Center, Container, Flex, Group, Stack, Title, Text } from '@mantine/core';
+import { Card, Center, Container, Flex, Group, Stack, Title, Text } from '@mantine/core';
 import React from 'react';
 import EmptyData from '../components/EmptyData.tsx';
 import Booking from '../interfaces/entities/booking.ts';
-import { getColor } from '../utils/utils.ts';
-import { getDateOnly, getHourAndMinutes } from '../utils/date-formater.ts';
+import keycloak from '../providers/authentication/keycloak.ts';
+import { getAllBookingTypeConferenceByUser } from '../utils/api/api-conference.ts';
 
 export const HistoryPage = () => {
-  const [bookings, setBookings] = React.useState<Booking[]>([]);
+  const [userBookings, setUserBookings] = React.useState<Booking[]>([]);
+
+  const getUserBookings = () => {
+    const email = keycloak.tokenParsed?.email ?? '';
+
+    if (!email) {
+      console.error('No email found in token');
+      return;
+    }
+
+    getAllBookingTypeConferenceByUser(email)
+      .then((data) => {
+        console.log(data);
+        setUserBookings(data);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  };
 
   React.useEffect(() => {
-    const fetchData = () => {
-      // const response = await fetch('http://localhost:3001/contracts');
-      // const data = await response.json();
-      setBookings([
-        {
-          id: '1',
-          startDate: new Date('2021-08-14T10:00:00'),
-          endDate: new Date('2021-08-14T12:00:00'),
-          status: 'finished',
-          bookingType: 'conference-room-2',
-        },
-        {
-          id: '3',
-          startDate: new Date('2021-08-14T10:00:00'),
-          endDate: new Date('2021-08-14T12:00:00'),
-          status: 'cancelled',
-          bookingType: 'conference-room-3',
-        },
-        {
-          id: '3',
-          startDate: new Date('2021-08-14T10:00:00'),
-          endDate: new Date('2021-08-14T12:00:00'),
-          status: 'ongoing',
-          bookingType: 'conference-room-3',
-        },
-      ]);
-    };
-    fetchData();
+    getUserBookings();
   }, []);
 
   const BookingCard = (booking: Booking) => {
     return (
       <Card shadow="sm" padding="lg" radius="md" withBorder>
-        <Group justify="space-between">
-          <Badge bg={getColor(booking.status)} radius="sm">
-            {booking.status}
-          </Badge>
-        </Group>
-
         <Stack mt="md" mb="xs">
           <Stack>
             <Group justify="space-between">
               <Title order={4}>Item</Title>
-              <Title order={4}>{booking.bookingType}</Title>
+              <Title order={4}>{booking.conferenceType}</Title>
             </Group>
             <Group justify="space-between">
               <Title order={4}>Date</Title>
-              <Title order={4}>{getDateOnly(booking.startDate)}</Title>
+              <Title order={4}>{booking.startTime.toString()}</Title>
             </Group>
           </Stack>
           <Stack>
             <Flex justify={'space-between'}>
-              <Text size="sm">From: {getHourAndMinutes(booking.startDate)}</Text>
-              <Text size="sm">To: {getHourAndMinutes(booking.endDate)}</Text>
+              <Text size="sm">From: {booking.startTime.toString()}</Text>
+              <Text size="sm">To: {booking.endTime.toString()}</Text>
             </Flex>
           </Stack>
         </Stack>
@@ -76,8 +61,8 @@ export const HistoryPage = () => {
         <Center>
           <Title order={3}>Your Bookings</Title>
         </Center>
-        {bookings.length > 0 ? (
-          bookings.map((booking) => <BookingCard key={booking.id} {...booking} />)
+        {userBookings.length > 0 ? (
+          userBookings.map((booking) => <BookingCard key={booking.id} {...booking} />)
         ) : (
           <EmptyData message="Bookings" />
         )}

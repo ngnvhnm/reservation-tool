@@ -24,19 +24,26 @@ public class ConferenceController {
         this.service = service;
     }
 
+    @GetMapping("")
+    public List<ConferenceResponseDto> getAllConferenceBooking(
+        @RequestParam(name = "mail",required = false) String mail,
+        @RequestParam(name = "date", required = false) LocalDateTime date,
+        @RequestParam(name = "type", required = false) CONF_TYPE type
+    )
+    {
+        if(mail != null)
+        {
+            return service.getConferencesByUserEmail(mail);
+        }
 
+        if(date != null  && type != null)
+        {
+            List<ConferenceResponseDto> allConferencesByDateAndType = service.getAllConferencesByDateAndType(
+                date, type);
+            return  allConferencesByDateAndType;
+        }
 
-
-    // 1. Get all conferences
-    @GetMapping("/get-all-events")
-    public List<ConferenceResponseDto> getAllConferences() {
         return service.getAllConferences();
-    }
-
-    // Get all conferences with a certain date:
-    @GetMapping("/get-all-events-by-date")
-    public List<TimeRangeDto> getAllConferencesByDate(@RequestBody LocalDateTime date) {
-        return service.getAllConferencesByDate(date);
     }
 
 

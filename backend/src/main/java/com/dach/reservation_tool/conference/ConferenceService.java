@@ -36,7 +36,11 @@ public class ConferenceService {
 
 
 
-
+    public List<ConferenceResponseDto> getConferencesByUserEmail(String email) {
+        return repository.findByMail(email).stream()
+                .map(mapper::toResponseDTO)
+                .toList();
+    }
 
 
     public List<ConferenceResponseDto> getAllConferences() {
@@ -46,11 +50,11 @@ public class ConferenceService {
     }
 
 
-    public List<TimeRangeDto> getAllConferencesByDate(LocalDateTime date) {
+    public List<ConferenceResponseDto> getAllConferencesByDateAndType(LocalDateTime date, CONF_TYPE type) {
         int year = date.getYear();
         int dayOfMonth =  date.getDayOfMonth();
-        return repository.findAllByDate(year,dayOfMonth).stream()
-                .map(mapper::toTimeRangeDTO)
+        return repository.findAllByDate(year, dayOfMonth, type).stream()
+                .map(mapper::toResponseDTO)
                 .toList();
     }
 
@@ -81,15 +85,18 @@ public class ConferenceService {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Not a valid time range");
         }
 
+        String[] attendeeList = createDto.attendeeList() != null && !createDto.attendeeList().isEmpty()
+            ? createDto.attendeeList().split(",")
+            : new String[0];
+
         if (!this.doesCollide(conference)) {
             var isCreated = oneClient.createEventForConference(createDto,
                     conference.getCalendarId(),
-                    Arrays.stream(createDto.attendeeList().split(","))
-                            .map(String::trim)
-                            .toList(),
+                    List.of(attendeeList),
                     "Conference room booked by " + createDto.bookerEmail());
             if (isCreated) {
                 repository.save(conference);
+                 // FIXME: This should be a proper JSON response
                 return ResponseEntity.ok("Das Event wurde erfolgreich erstellt");
             }
             else {
@@ -97,7 +104,9 @@ public class ConferenceService {
             }
         }
         else {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Zu dem gewünschten Zeitpunkt existiert bereits eine Reservierung");  //Muss was besseres hin
+            // FIXME: This should be a proper JSON response
+            String errorMessage = "{\"message\": \"Zu dem gewünschten Zeitpunkt existiert bereits eine Reservierung\"}";
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(errorMessage);
         }
     }
 

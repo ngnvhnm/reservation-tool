@@ -9,6 +9,7 @@ import com.dach.reservation_tool.parkinglot.dto.ParkinglotUpdateDto;
 import com.github.caldav4j.methods.HttpDeleteMethod;
 import com.github.caldav4j.methods.HttpPutMethod;
 import com.github.caldav4j.model.request.CalendarRequest;
+import java.util.Collections;
 import net.fortuna.ical4j.data.CalendarOutputter;
 import net.fortuna.ical4j.model.DateTime;
 import net.fortuna.ical4j.model.component.VEvent;
@@ -179,7 +180,10 @@ public class OneClient {
             booker.getParameters().add(PartStat.ACCEPTED);
             event.getProperties().add(booker);
 
-            for (String attendeeMail : attendeeList) {
+            // Handle nullable attendeeList
+            List<String> finalAttendeeList = attendeeList != null ? attendeeList : Collections.emptyList();
+
+            for (String attendeeMail : finalAttendeeList) {
                 Attendee attendee = new Attendee(URI.create("mailto:"+attendeeMail));
                 attendee.getParameters().add(new Cn(attendeeMail));
                 attendee.getParameters().add(PartStat.ACCEPTED);

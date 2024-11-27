@@ -1,9 +1,9 @@
-type Status = 'ongoing' | 'finished' | 'cancelled';
-
 export default interface Booking {
   id: string;
-  startDate: Date;
-  endDate: Date;
-  status: Status;
-  bookingType: string;
+  startTime: Date;
+  endTime: Date;
+  timeOfBooking: Date;
+  conferenceType: string;
+  bookerEmail: string;
+  attendeeList: string;
 }
