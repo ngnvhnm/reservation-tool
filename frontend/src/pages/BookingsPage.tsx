@@ -8,10 +8,10 @@ import {
   Select,
   Button,
   Group,
-  ComboboxItemGroup,
+  ComboboxItemGroup, Badge, Input,
 } from '@mantine/core';
-import { useForm } from '@mantine/form';
-import { IconClock } from '@tabler/icons-react';
+import { isEmail, useForm } from '@mantine/form';
+import { IconClock, IconX } from '@tabler/icons-react';
 import { getBookableTypes } from '../utils/api/api-bookable-type.ts';
 import {
   createBookingTypeConference,
@@ -26,6 +26,8 @@ type FormValues = {
   selectedItem: string | null;
   selectedStartTime: string | null;
   selectedEndTime: string | null;
+  attendeeList: string[] | null;
+  attendeeTemp: string | null;
 };
 
 const initialValues: FormValues = {
@@ -33,6 +35,8 @@ const initialValues: FormValues = {
   selectedItem: null,
   selectedStartTime: null,
   selectedEndTime: null,
+  attendeeList: null,
+  attendeeTemp: null,
 };
 
 export const BookingsPage = () => {
@@ -87,6 +91,9 @@ export const BookingsPage = () => {
           return 'End time should be greater than start time';
         }
       },
+      attendeeTemp: (value) => {
+        return isEmail(value) ? undefined : 'Invalid email';
+      }
     },
   });
 
@@ -107,7 +114,7 @@ export const BookingsPage = () => {
           : new Date(),
       conferenceType: values.selectedItem ?? '',
       bookerEmail: keycloak.tokenParsed?.email ?? '',
-      attendeeList: '', // FIXME: Change to actual emails, it should be comma separated list of emails
+      attendeeList: values.attendeeList ? values.attendeeList.join(',') : '',
     };
 
     createBookingTypeConference(body)
@@ -188,8 +195,61 @@ export const BookingsPage = () => {
             form.getValues().selectedStartTime === null
           }
         />
+        <Group mt="md" bg="gray" p="md">
+          {
+            form.getValues().attendeeList?.map((attendee, index) => (
+              <Badge key={index} color="blue" variant="filled">
+                {attendee}
+                <IconX size={10}
+                       style={{ cursor: 'pointer' }}
+                       onClick={() => {
+                  const values = form.getValues();
+                  form.setFieldValue(
+                    'attendeeList',
+                    values?.attendeeList
+                      ? values.attendeeList.filter((_, i) => i !== index)
+                      : [], // Fallback to an empty array
+                  );
+                }} />
+              </Badge>))
+          }
+          <Input
+            type={'email'}
+            placeholder="Enter attendees"
+            key={form.key('attendeeTemp')}
+            {...form.getInputProps('attendeeTemp')}
+            onKeyPress={(event) => {
+              console.log("value2: " + event.currentTarget.value);
+
+              if (event.key === 'Enter' || event.key === ',' || event.key === ' ') {
+                form.setFieldValue('attendeeList', [
+                  ...(form.getValues().attendeeList ?? []),
+                  event.currentTarget.value,
+                ]);
+                console.log("value: " + form.getValues().attendeeList);
+                event.currentTarget.value = '';
+              }
+            }}
+            disabled={
+              form.getValues().selectedItem === null ||
+              form.getValues().bookingDate === null ||
+              form.getValues().selectedStartTime === null ||
+              form.getValues().selectedEndTime === null
+            }
+          >
+          </Input>
+        </Group>
         <Group justify="flex-end" mt="md">
-          <Button type="submit" color="blue">
+          <Button
+            type="submit"
+            color="blue"
+            disabled={
+              form.getValues().selectedItem === null ||
+              form.getValues().bookingDate === null ||
+              form.getValues().selectedStartTime === null ||
+              form.getValues().selectedEndTime === null
+            }
+          >
             Submit
           </Button>
         </Group>
