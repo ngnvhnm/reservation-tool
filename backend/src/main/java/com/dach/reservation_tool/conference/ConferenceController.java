@@ -33,7 +33,7 @@ public class ConferenceController {
         return service.getAllConferences();
     }
 
-    @GetMapping("/")
+    @GetMapping("")
     public List<ConferenceResponseDto> getAllConferencesByEmailAndDate(@RequestParam("mail") String mail)
     {
         return service.getConferencesByUserEmail(mail);

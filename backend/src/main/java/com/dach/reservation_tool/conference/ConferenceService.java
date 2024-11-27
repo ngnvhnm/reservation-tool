@@ -85,10 +85,14 @@ public class ConferenceService {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Not a valid time range");
         }
 
+        String[] attendeeList = createDto.attendeeList() != null && !createDto.attendeeList().isEmpty()
+            ? createDto.attendeeList().split(",")
+            : new String[0];
+
         if (!this.doesCollide(conference)) {
             oneClient.createEventForConference(createDto,
                     conference.getCalendarId(),
-                    Arrays.stream(createDto.attendeeList().split(",")).toList(),
+                    List.of(attendeeList),
                     "Conference room booked by " + createDto.bookerEmail());
             repository.save(conference);
             // FIXME: This should be a proper JSON response
