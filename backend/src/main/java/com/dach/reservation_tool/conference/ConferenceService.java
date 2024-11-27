@@ -36,7 +36,11 @@ public class ConferenceService {
 
 
 
-
+    public List<ConferenceResponseDto> getConferencesByUserEmail(String email) {
+        return repository.findByMail(email).stream()
+                .map(mapper::toResponseDTO)
+                .toList();
+    }
 
 
     public List<ConferenceResponseDto> getAllConferences() {

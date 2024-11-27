@@ -33,10 +33,10 @@ public class ConferenceController {
         return service.getAllConferences();
     }
 
-    // Get all conferences with a certain date:
-    @GetMapping("/get-all-events-by-date")
-    public List<TimeRangeDto> getAllConferencesByDate(@RequestBody LocalDateTime date) {
-        return service.getAllConferencesByDate(date);
+    @GetMapping("/")
+    public List<ConferenceResponseDto> getAllConferencesByEmailAndDate(@RequestParam("mail") String mail)
+    {
+        return service.getConferencesByUserEmail(mail);
     }
 
 
