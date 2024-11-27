@@ -11,6 +11,11 @@ const getDateOnly = (date: Date): string => {
   return `${day}.${month}.${year}`;
 };
 
+/**
+ * Format date to string (hh:mm)
+ * @param date Date to format
+ * @returns Formatted date
+ */
 const getHourAndMinutes = (date: Date): string => {
   const hour = date.getHours().toString().padStart(2, '0');
   const minutes = date.getMinutes().toString().padStart(2, '0');
