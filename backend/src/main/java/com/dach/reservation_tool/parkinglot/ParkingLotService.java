@@ -6,6 +6,8 @@ import com.dach.reservation_tool.parkinglot.dto.ParkinglotResponseDto;
 import com.dach.reservation_tool.parkinglot.dto.ParkinglotTimeRangeDto;
 import com.dach.reservation_tool.parkinglot.dto.ParkinglotUpdateDto;
 import com.dach.reservation_tool.util.OneClient;
+import java.util.ArrayList;
+import java.util.Collections;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
