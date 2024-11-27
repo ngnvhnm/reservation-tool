@@ -50,11 +50,11 @@ public class ConferenceService {
     }
 
 
-    public List<TimeRangeDto> getAllConferencesByDate(LocalDateTime date) {
+    public List<ConferenceResponseDto> getAllConferencesByDateAndType(LocalDateTime date, CONF_TYPE type) {
         int year = date.getYear();
         int dayOfMonth =  date.getDayOfMonth();
-        return repository.findAllByDate(year,dayOfMonth).stream()
-                .map(mapper::toTimeRangeDTO)
+        return repository.findAllByDate(year, dayOfMonth, type).stream()
+                .map(mapper::toResponseDTO)
                 .toList();
     }
 

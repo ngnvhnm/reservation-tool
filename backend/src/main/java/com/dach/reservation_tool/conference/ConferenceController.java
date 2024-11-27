@@ -24,19 +24,26 @@ public class ConferenceController {
         this.service = service;
     }
 
-
-
-
-    // 1. Get all conferences
-    @GetMapping("/get-all-events")
-    public List<ConferenceResponseDto> getAllConferences() {
-        return service.getAllConferences();
-    }
-
     @GetMapping("")
-    public List<ConferenceResponseDto> getAllConferencesByEmailAndDate(@RequestParam("mail") String mail)
+    public List<ConferenceResponseDto> getAllConferenceBooking(
+        @RequestParam(name = "mail",required = false) String mail,
+        @RequestParam(name = "date", required = false) LocalDateTime date,
+        @RequestParam(name = "type", required = false) CONF_TYPE type
+    )
     {
-        return service.getConferencesByUserEmail(mail);
+        if(mail != null)
+        {
+            return service.getConferencesByUserEmail(mail);
+        }
+
+        if(date != null  && type != null)
+        {
+            List<ConferenceResponseDto> allConferencesByDateAndType = service.getAllConferencesByDateAndType(
+                date, type);
+            return  allConferencesByDateAndType;
+        }
+
+        return service.getAllConferences();
     }
 
 
