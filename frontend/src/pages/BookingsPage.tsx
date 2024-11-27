@@ -181,7 +181,7 @@ export const BookingsPage = () => {
         />
         <TimeInput
           minTime={form.getValues()?.selectedStartTime ?? '00:00'}
-          label="Select your start time"
+          label="Select your end time"
           ref={endTimeRef}
           rightSection={pickerControl(endTimeRef)}
           variant="filled"
