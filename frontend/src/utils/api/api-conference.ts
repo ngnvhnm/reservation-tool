@@ -1,5 +1,6 @@
 import loadEnv from '../load-env.ts';
 import { headers, Message } from './index.ts';
+import Booking from '../../interfaces/entities/booking.ts';
 
 const route = `${loadEnv().SPRING_BACKEND_ADDRESS}/v1/conferences`;
 
@@ -27,7 +28,7 @@ export const createBookingTypeConference = async (body: CreateBookingTypeConfere
 };
 
 export const getAllBookingTypeConferenceByUser = async (email: string) => {
-  const response = await fetch(`${route}?email=${email}`, {
+  const response = await fetch(`${route}?mail=${email}`, {
     headers: { ...(await headers()) },
   });
 
@@ -35,7 +36,7 @@ export const getAllBookingTypeConferenceByUser = async (email: string) => {
   if (!response.ok) {
     throw new Error((data as Message).message);
   }
-  return data as CreateBookingTypeConferenceDto;
+  return data as Booking[];
 };
 
 export const deleteBookingTypeConference = async (id: string) => {
