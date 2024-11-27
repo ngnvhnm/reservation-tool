@@ -23,4 +23,16 @@ const getHourAndMinutes = (date: Date): string => {
   return `${hour}:${minutes}`;
 };
 
-export { getDateOnly, getHourAndMinutes };
+/**
+ * Get a full date from a string (dd.mm.yyyy hh:mm)
+ * @param date Date string
+ * @returns Date object
+ */
+const getFullDateGMT1 = (date: Date, time: string): Date => {
+  const [hours, minutes] = time.split(':').map(Number); // Parse hours and minutes
+  const newDate = new Date(date); // Create a copy of the date
+  newDate.setHours(hours+1, minutes, 0, 0); // Set hours and minutes + 1
+  return new Date(newDate.getTime());
+};
+
+export { getDateOnly, getHourAndMinutes, getFullDateGMT1 };

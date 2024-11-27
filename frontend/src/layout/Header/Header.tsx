@@ -4,7 +4,6 @@ import { IconLogout } from '@tabler/icons-react';
 import { Button, Container, Group, Image, Tabs, useMantineTheme } from '@mantine/core';
 import classes from './Header.module.css';
 import keycloak from '../../providers/authentication/keycloak.ts';
-
 const tabs = ['booking', 'history', 'settings'];
 
 export function Header() {

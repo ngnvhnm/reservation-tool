@@ -17,6 +17,9 @@ import {
   createBookingTypeConference,
   CreateBookingTypeConferenceDto,
 } from '../utils/api/api-conference.ts';
+import { getFullDateGMT1 } from '../utils/date-formater.ts';
+import { notifications } from '@mantine/notifications';
+import keycloak from '../providers/authentication/keycloak.ts';
 
 type FormValues = {
   bookingDate: Date | null;
@@ -96,33 +99,38 @@ export const BookingsPage = () => {
     const body: CreateBookingTypeConferenceDto = {
       startTime:
         values.bookingDate && values.selectedStartTime
-          ? new Date(
-              values.bookingDate.setHours(
-                parseInt(values.selectedStartTime.split(':')[0]),
-                parseInt(values.selectedStartTime.split(':')[1]),
-              ),
-            )
+          ? getFullDateGMT1(values.bookingDate, values.selectedStartTime)
           : new Date(),
       endTime:
         values.bookingDate && values.selectedEndTime
-          ? new Date(
-              values.bookingDate.setHours(
-                parseInt(values.selectedEndTime.split(':')[0]),
-                parseInt(values.selectedEndTime.split(':')[1]),
-              ),
-            )
+          ? getFullDateGMT1(values.bookingDate, values.selectedEndTime)
           : new Date(),
       conferenceType: values.selectedItem ?? '',
-      bookerEmail: 'test@gmail.com', // FIXME: Change to actual email
-      attendeeList: 'test1@gmail.com,test2@gmail.com', // FIXME: Change to actual emails
+      bookerEmail: keycloak.tokenParsed?.email ?? '',
+      attendeeList: '', // FIXME: Change to actual emails, it should be comma separated list of emails
     };
 
     createBookingTypeConference(body)
       .then(() => {
+        // TODO: Create util for this, make more abstraction
         console.log('Booking created');
+        notifications.show({
+          title: 'Success',
+          message: 'Booking created successfully',
+          color: 'green',
+        });
       })
       .catch((error) => {
+        // TODO: Create util for this, make more abstraction
         console.error(error);
+        notifications.show({
+          title: 'Error',
+          message: error.message,
+          color: 'red',
+        });
+      })
+      .finally(() => {
+        form.reset();
       });
   };
 

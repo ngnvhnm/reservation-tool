@@ -91,10 +91,14 @@ public class ConferenceService {
                     Arrays.stream(createDto.attendeeList().split(",")).toList(),
                     "Conference room booked by " + createDto.bookerEmail());
             repository.save(conference);
-            return ResponseEntity.ok("Das Event wurde erfolgreich erstellt");
+            // FIXME: This should be a proper JSON response
+            String message = "{\"message\": \"Das Event wurde erfolgreich erstellt\"}";
+            return ResponseEntity.ok(message);
         }
         else {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Zu dem gewünschten Zeitpunkt existiert bereits eine Reservierung");  //Muss was besseres hin
+            // FIXME: This should be a proper JSON response
+            String errorMessage = "{\"message\": \"Zu dem gewünschten Zeitpunkt existiert bereits eine Reservierung\"}";
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(errorMessage);
         }
     }
 
