@@ -19,6 +19,7 @@ import {
 } from '../utils/api/api-conference.ts';
 import { getFullDateGMT1 } from '../utils/date-formater.ts';
 import { notifications } from '@mantine/notifications';
+import keycloak from '../providers/authentication/keycloak.ts';
 
 type FormValues = {
   bookingDate: Date | null;
@@ -105,8 +106,8 @@ export const BookingsPage = () => {
           ? getFullDateGMT1(values.bookingDate, values.selectedEndTime)
           : new Date(),
       conferenceType: values.selectedItem ?? '',
-      bookerEmail: 'test@gmail.com', // FIXME: Change to actual email
-      attendeeList: 'test1@gmail.com,test2@gmail.com', // FIXME: Change to actual emails
+      bookerEmail: keycloak.tokenParsed?.email ?? '',
+      attendeeList: '', // FIXME: Change to actual emails, it should be comma separated list of emails
     };
 
     createBookingTypeConference(body)
